@@ -1,26 +1,24 @@
 # --------------------- #
-# 0 - dataImportWrangle #
+# 0 - dataImportClean #
 # --------------------- #
 
 # ------------------------------------------
 # DESC: loads, and cleans Excel data into suitable format for analysis
 # SCRIPT DEPENDENCIES: none
 # PACKAGE DEPENDENCIES:
-# 1. 'readxl'
-# 2. 'magrittr'
-# 3. 'dplyr'
-# 4. 'tidyr'
-#
+ # 1. 'pacman' 
+ # 2. 'readxl'
+ # 3. 'magrittr'
+ # 4. 'janitor'
+ # 5. 'dplyr'
+ # 6. 'tidyr'
+
 # NOTES: none
 # ------------------------------------------
 
 # Data import and wrangling
-# library(readxl)
-# library(janitor)
-# library(magrittr)
-# library(dplyr)
-# library(stringr)
-# library(tidyr)
+vec_packages <- c("readxl", "janitor", "magrittr", "dplyr", "stringr", "tidyr")
+pacman::p_load(char = vec_packages, install = TRUE)
 
 # Data Import -------------------------------------------------------------
 data_activity_fund <- read_xlsx(path = "data/AudienceFundKPI2017.xlsx", sheet = "Activity List", skip = 3)
