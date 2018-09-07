@@ -16,7 +16,12 @@ link-citations: yes
 ---
 
 ```{r setup, include = FALSE}
+# For markdown template
 library(tufte)
+
+# Load relevant packages for project
+vec_packages <- c("readxl", "janitor", "magrittr", "dplyr", "tidyr", "tibble", "ggplot2", "scales")
+pacman::p_load(char = vec_packages, install = TRUE)
 
 # invalidate cache when the tufte version changes
 knitr::opts_chunk$set(tidy = FALSE, cache.extra = packageVersion('tufte'))
@@ -26,6 +31,8 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
 # Load scripts
 source("scripts/0 - functions.R")
+source("scripts/1.1 - dataImportClean.R")
+source("scripts/1.2 - dataWrangle.R")
 
 # Turn off scientific notation
 options(scipen = 999)
