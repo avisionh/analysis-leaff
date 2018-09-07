@@ -18,6 +18,8 @@
 vec_packages <- c("magrittr", "dplyr", "tibble")
 pacman::p_load(char = vec_packages, install = TRUE)
 
+# Data: Demographics ------------------------------------------------------
+
 # Stage 1. Replace NAs so we can reformat our data by using the 'rep' function 
 temp_data <- data_demographics %>% 
   mutate_at(.vars = vars(Value), .funs = funs(replace(., is.na(.), 0)))
@@ -31,5 +33,16 @@ data_demographics_master <- data_demographics_master %>%
   left_join(y = data_demographics, by = c("value" = "Field")) %>% 
   rename(Field = value) %>% 
   select(Category, Field)
+
+
+# Data: Activity Fund -----------------------------------------------------
+data_activity_fund_master <- rep(x = data_activity_fund$FilmTitle, times = data_activity_fund$TotalAdmissions)
+
+data_activity_fund_master <- data_activity_fund_master %>% 
+  as.tibble() %>% 
+  left_join(y = data_activity_fund, by = c("value" = "FilmTitle")) %>% 
+  rename(FilmTitle = value) %>% 
+  select(FilmTitle, VenueName)
+  
 
 rm(temp_data)
