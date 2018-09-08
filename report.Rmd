@@ -41,28 +41,37 @@ options(scipen = 999)
 # Executive Summary
 
 # Introduction
-The Tufte handout style is a style that Edward Tufte uses in his books and handouts. Tufte's style is known for its extensive use of sidenotes, tight integration of graphics with text, and well-set typography. This style has been implemented in LaTeX and HTML/CSS^[See Github repositories [tufte-latex](https://github.com/tufte-latex/tufte-latex) and [tufte-css](https://github.com/edwardtufte/tufte-css)], respectively. We have ported both implementations into the [**tufte** package](https://github.com/rstudio/tufte). If you want LaTeX/PDF output, you may use the `tufte_handout` format for handouts, and `tufte_book` for books. For HTML output, use `tufte_html`. These formats can be either specified in the YAML metadata at the beginning of an R Markdown document (see an example below), or passed to the `rmarkdown::render()` function. See @R-rmarkdown for more information about **rmarkdown**.
+`r newthought('This paper analyses the data')` collected from the London East Asia Film Festival (LEAFF) 2017. It does so with the intention of providing a summary of how the successful the event was, and to provide a benchmark for future editions of LEAFF.
 
-```yaml
----
-title: "An Example Using the Tufte Style"
-author: "John Smith"
-output:
-  tufte::tufte_handout: default
-  tufte::tufte_html: default
----
+# Section 1: General Information
+`r newthought("This section presents")` a general high-level overview of the film shown and where they were screened.
+
+## Section 1.1: Films Shown and Locations
+
+```{r (HIDE) Section 1.1, include = FALSE, echo = FALSE}
+# Create text for film titles
+txt_film_titles <- data_activity_fund %>% 
+  head(5) %>% 
+  select(FilmTitle, YearOfRelease) %>% 
+  mutate(DummyText_1 = " (",
+         DummyText_2 = ")") %>% 
+  select(FilmTitle, DummyText_1, YearOfRelease, DummyText_2) %>% 
+  unite(col = Text, FilmTitle, DummyText_1, YearOfRelease, DummyText_2, sep = "") %>% 
+  pull()
+txt_film_titles <- paste0(txt_film_titles[1:4], sep = ", ", txt_film_titles[5])
+
+# Create text for film screenings
+txt_film_screenings <- data_activity_fund %>% 
+  distinct(VenueName)
+txt_film_screenings <- paste0(txt_film_screenings[1:3], sep = ", ", txt_film_screenigns[8])
+  
 ```
 
-There are two goals of this package:
+For the 2017 festival a wide range of films from different nations that included South Korea, Japan, Hong Kong, Vietnam, and the Phillippines were shown. ^[[Full programme](https://www.leaff.org.uk/programme-2/)] These included `r toString(txt_film_titles)`. 
 
-1. To produce both PDF and HTML output with similar styles from the same R Markdown document;
-1. To provide simple syntax to write elements of the Tufte style such as side notes and margin figures, e.g. when you want a margin figure, all you need to do is the chunk option `fig.margin = TRUE`, and we will take care of the details for you, so you never need to think about `\begin{marginfigure} \end{marginfigure}` or `<span class="marginfigure"> </span>`; the LaTeX and HTML code under the hood may be complicated, but you never need to learn or write such code.
+The screenings for these films took place in a variety of locations, mostly in London, but with a few in other regions in the UK. These included `r toString(txt_film_screenings)`.
 
-If you have any feature requests or find bugs in **tufte**, please do not hesitate to file them to https://github.com/rstudio/tufte/issues. For general questions, you may ask them on StackOverflow: http://stackoverflow.com/tags/rmarkdown.
 
-# Headings
-
-This style provides first and second-level headings (that is, `#` and `##`), demonstrated in the next section. You may get unexpected output if you try to use `###` and smaller headings.
 
 `r newthought('In his later books')`^[[Beautiful Evidence](http://www.edwardtufte.com/tufte/books_be)], Tufte starts each section with a bit of vertical space, a non-indented paragraph, and sets the first few words of the sentence in small caps. To accomplish this using this style, call the `newthought()` function in **tufte** in an _inline R expression_ `` `r ` `` as demonstrated at the beginning of this paragraph.^[Note you should not assume **tufte** has been attached to your R session. You should either `library(tufte)` in your R Markdown document before you call `newthought()`, or use `tufte::newthought()`.]
 
