@@ -21,16 +21,16 @@
  # 1. x | (tibble) dataframe to pass through plotting function
  # 2. colour_fill | (char) colour to fill the bars
  # 3. colour_txt | (char) colour for text of percents displayed
-func_plot_counts_percents <- function(x, plot_stat = "count", colour_fill, colour_txt, plot_title, plot_subtitle, plot_title_x) {
+func_plot_counts_percents <- function(x, col_x, plot_stat = "count", colour_fill, plot_title, plot_title_x) {
   
-  plot_bar <- ggplot(data = data.frame(x), mapping = aes(x = x)) +
+  plot_bar <- ggplot(data = data.frame(x), mapping = aes_string(x = col_x)) +
     geom_bar(mapping = aes(y = (..count..)), fill = colour_fill) +
     geom_text(mapping = aes(y = (..count..),
                             label = ifelse((..count..) == 0, "",
                                            scales::percent((..count..)/sum(..count..)))), 
               stat = plot_stat, 
-              colour = colour_txt) +
-    labs(title = plot_title, subtitle = plot_subtitle, x = plot_title_x, y = "Count") +
+              colour = "black") +
+    labs(title = paste0("Bar Chart: ", plot_title), subtitle = "LEAFF 2017", x = plot_title_x, y = "Count") +
     theme(plot.title = element_text(face = "bold", hjust = 0.5),
           plot.subtitle = element_text(face = "bold", hjust = 0.5),
           panel.background = element_blank(),

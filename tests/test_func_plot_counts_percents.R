@@ -23,7 +23,7 @@ x <- data_demographics_master %>%
   filter(Category == "Age" & Field != "prefer not to say / did not answer") %>% 
   select(Field) %>% 
   pull()
-ggplot(data = data.frame(x), mapping = aes(x = x)) +
+ggplot(data = data.frame(x), mapping = aes_string(x = x)) +
   geom_bar(mapping = aes(y = (..count..)), stat = "count", fill = "seagreen2") +
   geom_text(mapping = aes(y = (..count..),
                           label = ifelse((..count..) == 0, "",

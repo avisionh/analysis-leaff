@@ -32,7 +32,8 @@ data_demographics_master <- data_demographics_master %>%
   as.tibble() %>% 
   left_join(y = data_demographics, by = c("value" = "Field")) %>% 
   rename(Field = value) %>% 
-  select(Category, Field)
+  select(Category, Field) %>% 
+  filter(Field != "prefer not to say / did not answer")
 
 
 # Data: Activity Fund -----------------------------------------------------

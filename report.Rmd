@@ -131,10 +131,10 @@ txt_event <- paste0(txt_event[1:length(txt_event)-1]) %>%
 + Beyond showing films, LEAFF 2017 offered audiences the chance to be more involved with films and cinema by hosting a series of events to accompany some of the festival's film screenings. These events involved sessions such as `r toString(txt_event)`.
 
 ## Section 1: Summary
-Given the range of films screened, the way these screenings met accessibility requirements, and the additional events that were hosted during the festival to complement the films, then LEAF 2017 offered all audiences an eclectic range of activities and films to enjoy.
+Given the range of films screened, the way these screenings met accessibility requirements, and the additional events that were hosted during the festival to complement the films, then LEAFF 2017 offered all audiences an eclectic range of activities and films to enjoy.
 
 # Section 2: Audience Demographics
-`r newthought("This section presents")` data on the demographics of people who have attended LEAF 2017, and filled in our post-screening surveys.
+`r newthought("This section presents")` data on the demographics of people who have attended LEAFF 2017, and filled in our post-screening surveys.
 
 ```{r 1. (HIDE) Remove variables, include = FALSE, echo = FALSE}
 rm(txt_access, txt_event, txt_film_screenings, txt_film_titles, txt_subtitles)
@@ -144,7 +144,7 @@ rm(txt_access, txt_event, txt_film_screenings, txt_film_titles, txt_subtitles)
 ## Section 2.1: Gender
 ```{r (HIDE) 2.1 Gender - text, include = FALSE, echo = FALSE}
 data_gender <- data_demographics %>% 
-  filter(Category == "Gender" & !is.na(Value)) %>% 
+  filter(Category == "Gender" & Field != "prefer not to say / did not answer") %>% 
   mutate(Percent = round(x = Value/sum(Value), digits = 2))
 
 value_female <- data_gender %>% 
@@ -166,16 +166,32 @@ if(value_female == value_male) {
 }
 ```
 
-```{r (SHOW) 2.1, Gender - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 1", fig.width = 5, fig.height = 3}
+```{r (SHOW) 2.1 Gender - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 1", fig.width = 5, fig.height = 3}
 func_plot_pie(x = data_gender, col_counts = "Percent", col_category = "Field", 
-              plot_title = "Gender", factor_levels = c("prefer not to say / did not answer", "Male", "Female"))
+              plot_title = "Gender", factor_levels = c("Male", "Female"))
 ```
-+ In **Figure 1**, the female-to-male proportion of audience who went to the film screenings during the festival and completed this field in the post-film survey  is `r toString(txt_gender)`, `r toString(paste0(value_female * 100, "%")` to `r toString(paste0(value_male * 100, "%"))`.
++ In **Figure 1**, the female-to-male proportion of audience who went to the film screenings during the festival and completed this field in the post-film survey  is `r toString(txt_gender)`, `r toString(paste0(value_female * 100, "%"))` to `r toString(paste0(value_male * 100, "%"))`.
 
 ## Section 2.2: Age
+```{r (HIDE) 2.2 Age - text, include = FALSE, echo = FALSE}
+data_age <- data_demographics %>% 
+  filter(Category == "Age") %>% 
+  mutate(Percent = round(x = Value/sum(Value), digits = 2))
 
+txt_age <- data_age %>% 
+  arrange(desc(Value)) %>% 
+  select(Field) %>% 
+  head(3) %>% 
+  pull()
+```
+```{r (SHOW) 2.2 Age - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 2", fig.width = 5, fig.height = 3}
+func_plot_counts_percents(x = filter(.data = data_demographics_master, Category == "Age"), col_x = "Field",
+                          colour_fill = cb_palette[["cb_orange"]], plot_title = "Age", plot_title_x = "Age")
+```
++ In **Figure 2**, the largest age groups for our audience who went to the film screenings during the festival and completed this field in the post-film survey are the `r toString(txt_age)` categories. 
 
-+ In *Figure 2**, the largest age group is
++ This ties in with the festival's aim to attract and engage young age groups in film and cinema, as it is the young age groups who will be the future consumers of film and cinema.
+
 
 In fact, you can include anything in the margin using the **knitr** engine named `marginfigure`. Unlike R code chunks ```` ```{r} ````, you write a chunk starting with ```` ```{marginfigure} ```` instead, then put the content in the chunk. See an example on the right about the first fundamental theorem of calculus.
 
