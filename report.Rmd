@@ -27,7 +27,7 @@ pacman::p_load(char = vec_packages, install = TRUE)
 knitr::opts_chunk$set(tidy = FALSE, cache.extra = packageVersion('tufte'))
 options(htmltools.dir.version = FALSE)
 
-knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+knitr::opts_chunk$set(results = "asis", warning = FALSE, message = FALSE)
 
 # Load scripts
 source("scripts/0 - functions.R")
@@ -35,7 +35,7 @@ source("scripts/1.1 - dataImportClean.R")
 source("scripts/1.2 - dataWrangle.R")
 
 # Turn off scientific notation
-options(scipen = 999)
+options(scipen = 999, expressions = 10000)
 
 cb_palette <- c("cb_black" = "#000000",
                 "cb_grey" = "#999999",
@@ -46,6 +46,8 @@ cb_palette <- c("cb_black" = "#000000",
                 "cb_dark_blue" = "#0072B2",
                 "cb_red" = "#D55E00",
                 "cb_pink" = "#CC79A7")
+
+rm(vec_packages)
 ```
 
 # Executive Summary
@@ -56,7 +58,7 @@ cb_palette <- c("cb_black" = "#000000",
 # Section 1: General Information
 `r newthought("This section presents")` a general high-level overview of the film shown and where they were screened.
 
-```{r (HIDE) Section 1.1, include = FALSE, echo = FALSE}
+```{r (HIDE) 1, include = FALSE, echo = FALSE}
 # Create text for film titles
 txt_film_titles <- data_activity_fund %>% 
   head(5) %>% 
@@ -65,14 +67,14 @@ txt_film_titles <- data_activity_fund %>%
   select(FilmTitle, DummyText_1, YearOfRelease, DummyText_2) %>% 
   unite(col = Text, FilmTitle, DummyText_1, YearOfRelease, DummyText_2, sep = "") %>% 
   pull()
-txt_film_titles <- paste0(txt_film_titles[1:4], sep = ", ") %>% 
+txt_film_titles <- paste0(txt_film_titles[1:4]) %>% 
   append(txt_film_titles[5])
 
 # Create text for film screenings
 txt_film_screenings <- data_activity_fund %>% 
   distinct(VenueName) %>% 
   pull()
-txt_film_screenings <- paste0(txt_film_screenings[1:3], sep = ", ") %>% 
+txt_film_screenings <- paste0(txt_film_screenings[1:3]) %>% 
   append(txt_film_screenings[8])
 
 # Create text for accessibility
@@ -111,22 +113,22 @@ txt_event <- data_activity_fund %>%
   filter(!is.na(event_type_where_more_than_just_a_screening_eg_q_a)) %>% 
   distinct(event_type_where_more_than_just_a_screening_eg_q_a) %>% 
   pull()
-txt_event <- paste0(txt_event[1:length(txt_event)-1], sep = ", ") %>% 
+txt_event <- paste0(txt_event[1:length(txt_event)-1]) %>% 
   append(txt_event[nrow(txt_event)])
 
 ```
 
 ## Section 1.1: Films Shown and Locations
 
-(@) For the 2017 festival a wide range of films from different nations that included South Korea, Japan, Hong Kong, Vietnam, and the Phillippines were shown. ^[[Full programme here](https://www.leaff.org.uk/programme-2/)] These included `r toString(txt_film_titles)`. 
++ For the 2017 festival a wide range of films from different nations that included South Korea, Japan, Hong Kong, Vietnam, and the Phillippines were shown. ^[[Full programme here](https://www.leaff.org.uk/programme-2/)] These included `r toString(txt_film_titles)`. 
 
-(@) The screenings for these films took place in a variety of locations, mostly in London, but with a few in other regions in the UK. These included `r toString(txt_film_screenings)`.
++ The screenings for these films took place in a variety of locations, mostly in London, but with a few in other regions in the UK. These included `r toString(txt_film_screenings)`.
 
 ## Section 1.2: Accessibility
-(@) For each of these film screenings, `r toString(txt_access)` of them were an **accessibility screening**. Of those that were an **accessbility screening**, `r toString(txt_subtitles)` of them had descriptive subtitles and/or were captioned.
++ For each of these film screenings, `r toString(txt_access)` of them were an **accessibility screening**. Of those that were an **accessbility screening**, `r toString(txt_subtitles)` of them had descriptive subtitles and/or were captioned.
 
 ## Section 1.3: Additional Events
-(@) Beyond showing films, LEAFF 2017 offered audiences the chance to be more involved with films and cinema by hosting a series of events to accompany some of the festival's film screenings. These events involved sessions such as `r toString(txt_event)`.
++ Beyond showing films, LEAFF 2017 offered audiences the chance to be more involved with films and cinema by hosting a series of events to accompany some of the festival's film screenings. These events involved sessions such as `r toString(txt_event)`.
 
 ## Section 1: Summary
 Given the range of films screened, the way these screenings met accessibility requirements, and the additional events that were hosted during the festival to complement the films, then LEAF 2017 offered all audiences an eclectic range of activities and films to enjoy.
@@ -134,25 +136,46 @@ Given the range of films screened, the way these screenings met accessibility re
 # Section 2: Audience Demographics
 `r newthought("This section presents")` data on the demographics of people who have attended LEAF 2017, and filled in our post-screening surveys.
 
-## Section 2.1: Gender
-
-
-Images and graphics play an integral role in Tufte's work. To place figures in the margin you can use the **knitr** chunk option `fig.margin = TRUE`. For example:
-
-```{r fig-margin, fig.margin = TRUE, fig.cap = "MPG vs horsepower, colored by transmission.", fig.width=3.5, fig.height=3.5, cache=TRUE, message=FALSE}
-library(ggplot2)
-mtcars2 <- mtcars
-mtcars2$am <- factor(
-  mtcars$am, labels = c('automatic', 'manual')
-)
-ggplot(mtcars2, aes(hp, mpg, color = am)) +
-  geom_point() + geom_smooth() +
-  theme(legend.position = 'bottom')
+```{r 1. (HIDE) Remove variables, include = FALSE, echo = FALSE}
+rm(txt_access, txt_event, txt_film_screenings, txt_film_titles, txt_subtitles)
 ```
 
-Note the use of the `fig.cap` chunk option to provide a figure caption. You can adjust the proportions of figures using the `fig.width` and `fig.height` chunk options. These are specified in inches, and will be automatically scaled down to fit within the handout margin.
 
-## Arbitrary Margin Content
+## Section 2.1: Gender
+```{r (HIDE) 2.1 Gender - text, include = FALSE, echo = FALSE}
+data_gender <- data_demographics %>% 
+  filter(Category == "Gender" & !is.na(Value)) %>% 
+  mutate(Percent = round(x = Value/sum(Value), digits = 2))
+
+value_female <- data_gender %>% 
+  filter(Field == "Female") %>% 
+  select(Percent) %>% 
+  pull()
+value_male <- data_gender %>% 
+  filter(Field == "Male") %>% 
+  select(Percent) %>% 
+  pull()
+
+# Create text for gender closeness
+if(value_female == value_male) {
+  txt_gender <- "equal"
+} else if (abs(value_female - value_male) < 0.3) {
+  txt_gender <- "similar"
+} else {
+  txt_gender <- "far apart"
+}
+```
+
+```{r (SHOW) 2.1, Gender - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 1", fig.width = 5, fig.height = 3}
+func_plot_pie(x = data_gender, col_counts = "Percent", col_category = "Field", 
+              plot_title = "Gender", factor_levels = c("prefer not to say / did not answer", "Male", "Female"))
+```
++ In **Figure 1**, the female-to-male proportion of audience who went to the film screenings during the festival and completed this field in the post-film survey  is `r toString(txt_gender)`, `r toString(paste0(value_female * 100, "%")` to `r toString(paste0(value_male * 100, "%"))`.
+
+## Section 2.2: Age
+
+
++ In *Figure 2**, the largest age group is
 
 In fact, you can include anything in the margin using the **knitr** engine named `marginfigure`. Unlike R code chunks ```` ```{r} ````, you write a chunk starting with ```` ```{marginfigure} ```` instead, then put the content in the chunk. See an example on the right about the first fundamental theorem of calculus.
 

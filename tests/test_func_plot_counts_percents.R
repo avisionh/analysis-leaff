@@ -33,5 +33,7 @@ ggplot(data = data.frame(x), mapping = aes(x = x)) +
 
 # UNIT TEST 2: [Category] = "Rating of experience"
 data <- filter(.data = data_demographics, Category == "Rating of the experience")
-func_plot_pie(x = data, col_counts = "Value", col_category = "Field", plot_title = "Rating", 
-              factor_levels = c("Brilliant       *****", "****", "***", "**", "Poor *"))
+data <- data %>% 
+  mutate(Percent = round(x = Value/sum(Value), digits = 2))
+func_plot_pie(x = data, col_counts = "Percent", col_category = "Field",
+              plot_title = "Rating", factor_levels = c("Brilliant       *****", "****", "***", "**", "Poor *"))

@@ -46,20 +46,22 @@ func_plot_counts_percents <- function(x, plot_stat = "count", colour_fill, colou
 # DESC: Creates pie chart
 # PACKAGE DEPENDENCIES:
  # 1. ggplot2
-
 # FUNCTION DEPENDENCIES: none
-# CREDIT: https://www.r-bloggers.com/bar-charts-with-percentage-labels-but-counts-on-the-y-axis/
+# CREDIT: 
+ # 1. Parameterised columns for ggplot2 | https://stackoverflow.com/questions/22309285/how-to-use-a-variable-to-specify-column-name-in-ggplot
 # NOTES: none
 # ARGUMENTS:
  # 1. x | (tibble) dataframe to pass through plotting function
  # 2. colour_fill | (char) colour to fill the bars
  # 3. colour_txt | (char) colour for text of percents displayed
-func_plot_pie <- function(x, col_counts, col_category, plot_title, factor_levels) {
+func_plot_pie <- function(x, col_counts, col_category, plot_title, factor_levels) {  #col_label, for displaying percents
   plot_pie <- ggplot(data = x, 
                      mapping = aes(x = "", y = get(col_counts),
-                                          fill = factor(x = get(col_category), levels = factor_levels), label = get(col_counts))) +
+                                   fill = factor(x = get(col_category), levels = factor_levels), label = get(col_counts))) +
     geom_bar(stat = "identity", width = 1) +
     coord_polar(theta = "y", start = 0) +
+    # try to display percents as well
+    #geom_text(mapping = aes(y = get(col_label), label = get(col_label, position = theta("y")))) +
     geom_text(size = 3, position = position_stack(vjust = 0.5)) +
     labs(title = paste0("Pie Chart: ", plot_title),
          subtitle = "LEAF 2017",
@@ -70,6 +72,6 @@ func_plot_pie <- function(x, col_counts, col_category, plot_title, factor_levels
           axis.line = element_blank(),
           axis.title = element_blank(),
           axis.text = element_blank())
-    
+  
   return(plot_pie)
 }
