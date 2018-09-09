@@ -29,11 +29,9 @@ data_demographics <- read_xlsx(path = "data/AudienceFundKPI2017.xlsx", sheet = "
 # General Excel file cleaning
 data_activity_fund <- data_activity_fund %>% 
   clean_names() %>% 
-  remove_empty_rows() %>% 
-  remove_empty_cols()
+  remove_empty(which = c("rows", "cols"))
 data_demographics <- data_demographics %>% 
-  remove_empty_rows() %>% 
-  remove_empty_cols()
+  remove_empty(which = c("rows", "cols"))
 
 # Data-specific cleaning
 data_activity_fund <- data_activity_fund %>% 
@@ -56,4 +54,4 @@ data_demographics <- data_demographics %>%
   mutate(Category = ifelse(is.na(Category), "General", Category),
          Field = str_replace(string = Field, pattern = "Age ", replacement = "")) %>% 
   # remove "Total Responses"
-  filter(Field != "Total Responses" & Field != "Total responses")
+  filter(Field != "Total Responses" & Field != "Total responses" & !is.na(Value))
