@@ -231,7 +231,7 @@ rm(data_gender, data_age, data_ethnicity, txt_gender, value_male, value_female,
    txt_age, txt_ethnicity, txt_ethnicity_top_two)
 ```
 
-## Section 3.1: Film Admissions
+## Section 3.1: Total admissions for each film
 ```{r (HIDE) 3.1 Admissions - text, echo = FALSE, include = FALSE}
 data_admissions <- data_activity_fund %>% 
   filter(!(YearOfRelease %in% c("various", "__"))) %>% 
@@ -281,6 +281,13 @@ ggplot(data = data_admissions,
 kable(table_admissions, caption = "_The most popular films by admissions for LEAFF 2017_")
 ```
 
+## Section 3.2: Retaining old audiences and capturing new audiences
+
+## Section 3.3: Audience rating of their LEAFF 2017 experience
+
+## Section 3.4: Audience main motivation for attending
+
+## Section 3.5: Audience likelihood of attending future LEAFFs
 
 ## Full Width Figures
 
