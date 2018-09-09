@@ -20,7 +20,7 @@ link-citations: yes
 library(tufte)
 
 # Load relevant packages for project
-vec_packages <- c("readxl", "janitor", "magrittr", "dplyr", "tidyr", "tibble", "ggplot2", "scales")
+vec_packages <- c("readxl", "janitor", "magrittr", "dplyr", "tidyr", "tibble", "ggplot2", "scales", "knitr")
 pacman::p_load(char = vec_packages, install = TRUE)
 
 # invalidate cache when the tufte version changes
@@ -222,16 +222,59 @@ _This would appeal most to sponsors who want to improve their brand exposure to 
 + Notice in particular that the number of *`r toString(txt_ethnicity_top_two[1,])`* and *`r toString(txt_ethnicity_top_two[2,])`* ethnic groups who attended LEAFF 2017 are very close. This demonstrates that the film festival is effetive in appealing to both an East Asian and non-East Asian audiences.
 
 
-In fact, you can include anything in the margin using the **knitr** engine named `marginfigure`. Unlike R code chunks ```` ```{r} ````, you write a chunk starting with ```` ```{marginfigure} ```` instead, then put the content in the chunk. See an example on the right about the first fundamental theorem of calculus.
+# Section 3: Key Performance Metrics
+`r newthought("This section presents")` key analyis of the festival's performance data.
 
-```{marginfigure}
-We know from _the first fundamental theorem of calculus_ that for $x$ in $[a, b]$:
-$$\frac{d}{dx}\left( \int_{a}^{x} f(u)\,du\right)=f(x).$$
+## Section 3.1: Film Admissions
+```{r (HIDE) 3.1 Admissions - text, echo = FALSE, include = FALSE}
+data_admissions <- data_activity_fund %>% 
+  filter(!(YearOfRelease %in% c("various", "__"))) %>% 
+  select(FilmTitle:YearOfRelease, TotalAdmissions) %>%
+  # get proper ordering of most popular films
+  group_by(FilmTitle) %>% 
+  summarise(TotalAdmissionsOverall = sum(TotalAdmissions)) %>% 
+  arrange(desc(TotalAdmissionsOverall)) %>% 
+  left_join(y = data_activity_fund, by = "FilmTitle") %>% 
+  select(FilmTitle, YearOfRelease, VenueName, TotalAdmissionsOverall, TotalAdmissions) %>% 
+  rename(TotalAdmissionsByCinema = TotalAdmissions)
+
+# Create table for printing
+table_admissions <- data_admissions %>% 
+  distinct(FilmTitle, .keep_all = TRUE) %>% 
+  select(-TotalAdmissionsByCinema) %>% 
+  rename(Film = FilmTitle,
+         `Release Year` = YearOfRelease,
+         Venue = VenueName,
+         `Total Admissions` = TotalAdmissionsOverall) %>% 
+  head(5) 
+
+n_open_gala <- 1679
+n_admissions_gala <- table_admissions %>% 
+  head(1) %>% 
+  select(`Total Admissions`) %>% 
+  pull()
+value_gala_admissions_proportion <- (n_admissions_gala / n_open_gala) * 100
+value_gala_admissions_proportion <- round(x = value_gala_admissions_proportion, digits = 2)
+```
+```{r (SHOW) 3.1 Admissions - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 4", fig.width = 7, fig.height = 10}
+ggplot(data = data_admissions, 
+       mapping = aes(x = reorder(x = FilmTitle, X = TotalAdmissionsOverall), y = TotalAdmissionsByCinema)) +
+  geom_bar(mapping = aes(fill = factor(VenueName)), stat = "identity") +
+  coord_flip() +
+  labs(title = "Bar Chart: Total Admissions by Film and Venue", subtitle = "LEAFF 2017", 
+       x = "Film", y = "Total Admissions", fill = "Venue") +
+  theme(plot.title = element_text(face = "bold", hjust = 0.5),
+                      plot.subtitle = element_text(face = "bold", hjust = 0.5),
+                      panel.background = element_blank(),
+                      axis.line = element_line(color = cb_palette["cb_black"]))
+```
++ In **Figure 4**, we have the number of people who bought tickets for each of the film screenings, with the colour-coding distinguishing which films were shown in which cinemas. In particular, it is worth noting that the most-watched film, *The Fortress*, was held at *Odeon Leicester Square*, which has a screen capacity of *`r toString(n_open_gala)`*; whereas the other cinemas where films were shown have much smaller capacities. 
+
++ The table below focusses on the key insight of the most popular films that can be drawn from **Figure 4**. Whilst we do not possess data on the seating capacity for each venue, and consequently cannot make a more accurate inference on which films sold the most tickets relative to the number of tickets available, we do know that for opening gala film, *The Fortress*, `r toString(paste0(value_gala_admissions_proportion, "%"))` of available tickets were sold.
+```{r (SHOW) 3.1 Admissions - table, echo = FALSE}
+kable(table_admissions, caption = "_The most popular films by admissions for LEAFF 2017_")
 ```
 
-For the sake of portability between LaTeX and HTML, you should keep the margin content as simple as possible (syntax-wise) in the `marginefigure` blocks. You may use simple Markdown syntax like `**bold**` and `_italic_` text, but please refrain from using footnotes, citations, or block-level elements (e.g. blockquotes and lists) there.
-
-Note: if you set `echo = FALSE` in your global chunk options, you will have to add `echo = TRUE` to the chunk to display a margin figure, for example ```` ```{marginfigure, echo = TRUE} ````.
 
 ## Full Width Figures
 
