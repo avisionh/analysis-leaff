@@ -221,9 +221,15 @@ _This would appeal most to sponsors who want to improve their brand exposure to 
 
 + Notice in particular that the number of *`r toString(txt_ethnicity_top_two[1,])`* and *`r toString(txt_ethnicity_top_two[2,])`* ethnic groups who attended LEAFF 2017 are very close. This demonstrates that the film festival is effetive in appealing to both an East Asian and non-East Asian audiences.
 
+## Section 2: Summary
+Given the relatively equal split between genders, the popularity of the festival with younger age groups, and the festival's ability to attract both East Asian and non-East Asian ethnic groups, LEAFF 2017 was effective in catering to the key audience group of younger adults equally between genders, and within this subgroup, attracting a wide range of people from different ehtnic backgrounds.  
 
 # Section 3: Key Performance Metrics
 `r newthought("This section presents")` key analyis of the festival's performance data.
+```{r 1. (HIDE) Remove variables, include = FALSE, echo = FALSE}
+rm(data_gender, data_age, data_ethnicity, txt_gender, value_male, value_female,
+   txt_age, txt_ethnicity, txt_ethnicity_top_two)
+```
 
 ## Section 3.1: Film Admissions
 ```{r (HIDE) 3.1 Admissions - text, echo = FALSE, include = FALSE}
