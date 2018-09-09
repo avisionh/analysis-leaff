@@ -30,3 +30,8 @@ ggplot(data = data.frame(x), mapping = aes(x = x)) +
                                          scales::percent((..count..)/sum(..count..)))), 
             stat="count", 
             colour = "black")
+
+# UNIT TEST 2: [Category] = "Rating of experience"
+data <- filter(.data = data_demographics, Category == "Rating of the experience")
+func_plot_pie(x = data, col_counts = "Value", col_category = "Field", plot_title = "Rating", 
+              factor_levels = c("Brilliant       *****", "****", "***", "**", "Poor *"))
