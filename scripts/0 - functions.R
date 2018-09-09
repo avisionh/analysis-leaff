@@ -53,7 +53,7 @@ func_plot_counts_percents <- function(x, col_x, plot_stat = "count", colour_fill
 # ARGUMENTS:
  # 1. x | (tibble) dataframe to pass through plotting function
  # 2. colour_fill | (char) colour to fill the bars
- # 3. colour_txt | (char) colour for text of percents displayed
+# 3. colour_txt | (char) colour for text of percents displayed
 func_plot_pie <- function(x, col_counts, col_category, plot_title, factor_levels) {  #col_label, for displaying percents
   plot_pie <- ggplot(data = x, 
                      mapping = aes(x = "", y = get(col_counts),

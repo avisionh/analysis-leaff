@@ -44,6 +44,6 @@ data_activity_fund_master <- data_activity_fund_master %>%
   left_join(y = data_activity_fund, by = c("value" = "FilmTitle")) %>% 
   rename(FilmTitle = value) %>% 
   select(FilmTitle, VenueName)
-  
+
 
 rm(temp_data)

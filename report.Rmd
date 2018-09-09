@@ -176,10 +176,9 @@ func_plot_pie(x = data_gender, col_counts = "Percent", col_category = "Field",
 ```{r (HIDE) 2.2 Age - text, include = FALSE, echo = FALSE}
 data_age <- data_demographics %>% 
   filter(Category == "Age") %>% 
-  mutate(Percent = round(x = Value/sum(Value), digits = 2))
+  arrange(desc(Value))
 
 txt_age <- data_age %>% 
-  arrange(desc(Value)) %>% 
   select(Field) %>% 
   head(3) %>% 
   pull()
@@ -188,9 +187,39 @@ txt_age <- data_age %>%
 func_plot_counts_percents(x = filter(.data = data_demographics_master, Category == "Age"), col_x = "Field",
                           colour_fill = cb_palette[["cb_orange"]], plot_title = "Age", plot_title_x = "Age")
 ```
-+ In **Figure 2**, the largest age groups for our audience who went to the film screenings during the festival and completed this field in the post-film survey are the `r toString(txt_age)` categories. 
++ In **Figure 2**, the largest three age groups for our audience who went to the film screenings during the festival and completed this field in the post-film survey are the `r toString(txt_age)` categories. 
 
 + This ties in with the festival's aim to attract and engage young age groups in film and cinema, as it is the young age groups who will be the future consumers of film and cinema.
+
+
+## Section 2.3: Ethnicity
+```{r (HIDE) 2.3 Ethnicity - text, include = FALSE, echo = FALSE}
+data_ethnicity <- data_demographics %>% 
+  filter(Category == "Ethnicity") %>% 
+  arrange(desc(Value)) %>% 
+  select(Field, Value)
+
+txt_ethnicity <- data_ethnicity %>% 
+  head(3) %>% 
+  select(Field) %>% 
+  pull()
+txt_ethnicity_top_two <- data_ethnicity %>% 
+  mutate(OpenBracket = " (", EndBracket = ")") %>%
+  select(Field, OpenBracket, Value, EndBracket) %>% 
+  head(2) %>% 
+  unite(col = Text, Field, OpenBracket, Value, EndBracket, sep = "")
+```
+```{r (SHOW) 2.3 Ethnicity - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 3", fig.width = 5, fig.height = 3}
+func_plot_counts_percents(x = filter(.data = data_demographics_master, Category == "Ethnicity"), col_x = "Field",
+                          colour_fill = cb_palette[["cb_light_blue"]], plot_title = "Ethnicity", plot_title_x = "Ethnicity")
+```
++ In **Figure 3**, the largest three ethnicity groups for our audience who went to the film screenings during the festival and completed this field in the post-film survey are `r toString(txt_ethnicity)`.
+
+```{marginfigure}
+_This would appeal most to sponsors who want to improve their brand exposure to different ethnic groups._
+```
+
++ Notice in particular that the number of *`r toString(txt_ethnicity_top_two[1,])`* and *`r toString(txt_ethnicity_top_two[2,])`* ethnic groups who attended LEAFF 2017 are very close. This demonstrates that the film festival is effetive in appealing to both an East Asian and non-East Asian audiences.
 
 
 In fact, you can include anything in the margin using the **knitr** engine named `marginfigure`. Unlike R code chunks ```` ```{r} ````, you write a chunk starting with ```` ```{marginfigure} ```` instead, then put the content in the chunk. See an example on the right about the first fundamental theorem of calculus.
