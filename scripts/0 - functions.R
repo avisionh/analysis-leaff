@@ -45,14 +45,14 @@ func_plot_counts_percents <- function(x, col_x, plot_stat = "count", colour_fill
 # func_plot_pie -----------------------------------------------
 # DESC: Creates pie chart
 # PACKAGE DEPENDENCIES:
- # 1. ggplot2
+# 1. ggplot2
 # FUNCTION DEPENDENCIES: none
 # CREDIT: 
- # 1. Parameterised columns for ggplot2 | https://stackoverflow.com/questions/22309285/how-to-use-a-variable-to-specify-column-name-in-ggplot
+# 1. Parameterised columns for ggplot2 | https://stackoverflow.com/questions/22309285/how-to-use-a-variable-to-specify-column-name-in-ggplot
 # NOTES: none
 # ARGUMENTS:
- # 1. x | (tibble) dataframe to pass through plotting function
- # 2. colour_fill | (char) colour to fill the bars
+# 1. x | (tibble) dataframe to pass through plotting function
+# 2. colour_fill | (char) colour to fill the bars
 # 3. colour_txt | (char) colour for text of percents displayed
 func_plot_pie <- function(x, col_counts, col_category, plot_title, factor_levels) {  #col_label, for displaying percents
   plot_pie <- ggplot(data = x, 

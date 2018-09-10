@@ -52,8 +52,12 @@ rm(vec_packages)
 
 # Executive Summary
 
+***
+
 # Introduction
 `r newthought('This paper analyses the data')` collected from the London East Asia Film Festival (LEAFF) 2017. It does so with the intention of providing a summary of how the successful the event was, and to provide a benchmark for future editions of LEAFF.
+
+***
 
 # Section 1: General Information
 `r newthought("This section presents")` a general high-level overview of the film shown and where they were screened.
@@ -132,6 +136,8 @@ txt_event <- paste0(txt_event[1:length(txt_event)-1]) %>%
 
 ## Section 1: Summary
 Given the range of films screened, the way these screenings met accessibility requirements, and the additional events that were hosted during the festival to complement the films, then LEAFF 2017 offered all audiences an eclectic range of activities and films to enjoy.
+
+***
 
 # Section 2: Audience Demographics
 `r newthought("This section presents")` data on the demographics of people who have attended LEAFF 2017, and filled in our post-screening surveys.
@@ -222,11 +228,13 @@ _This would appeal most to sponsors who want to improve their brand exposure to 
 + Notice in particular that the number of *`r toString(txt_ethnicity_top_two[1,])`* and *`r toString(txt_ethnicity_top_two[2,])`* ethnic groups who attended LEAFF 2017 are very close. This demonstrates that the film festival is effetive in appealing to both an East Asian and non-East Asian audiences.
 
 ## Section 2: Summary
-Given the relatively equal split between genders, the popularity of the festival with younger age groups, and the festival's ability to attract both East Asian and non-East Asian ethnic groups, LEAFF 2017 was effective in catering to the key audience group of younger adults equally between genders, and within this subgroup, attracting a wide range of people from different ehtnic backgrounds.  
+Given the relatively equal split between genders, the popularity of the festival with younger age groups, and the festival's ability to attract both East Asian and non-East Asian ethnic groups, LEAFF 2017 was effective in catering to the key audience group of younger adults equally between genders, and within this subgroup, attracting a wide range of people from different ehtnic backgrounds.
+
+***
 
 # Section 3: Key Performance Metrics
 `r newthought("This section presents")` key analyis of the festival's performance data.
-```{r 1. (HIDE) Remove variables, include = FALSE, echo = FALSE}
+```{r 2. (HIDE) Remove variables, include = FALSE, echo = FALSE}
 rm(data_gender, data_age, data_ethnicity, txt_gender, value_male, value_female,
    txt_age, txt_ethnicity, txt_ethnicity_top_two)
 ```
@@ -282,12 +290,74 @@ kable(table_admissions, caption = "_The most popular films by admissions for LEA
 ```
 
 ## Section 3.2: Retaining old audiences and capturing new audiences
+```{r (HIDE) 3.2 Retention - text, echo = FALSE, include = FALSE}
+data_retention <- data_demographics %>% 
+  filter(Category == "New   Audience" & Field != "Prefer not to say / did not answer") %>% 
+  mutate(Percent = round(x = Value/sum(Value), digits = 2)) %>% 
+  arrange(desc(Value))
+
+txt_retention_first <- data_retention %>% 
+  head(1)
+txt_retention_first <- paste0(select(.data = txt_retention_first, Value),
+                              " of LEAFF 2017 attendees saying ", 
+                              "\"", select(.data = txt_retention_first, Field), "\"")
+txt_retention_second <- data_retention[2, ]
+txt_retention_second <- paste0(select(.data = txt_retention_second, Value),
+                              " of LEAFF 2017 attendees saying ", 
+                              "\"", select(.data = txt_retention_second, Field), "\"")
+```
+```{r (SHOW) 3.2 Retention - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 5", fig.width = 6, fig.height = 5}
+lvls <- c("Been to LEAFF 2015", "Been to LEAFF 2016",
+          "Been to both", "This is my first time")
+func_plot_pie(x = data_retention, col_counts = "Percent", col_category = "Field", 
+              plot_title = "Audience Retention", factor_levels = lvls)
+```
++ In **Figure 5**, we have `r toString(txt_retention_first)` and `r toString(txt_retention_second)`. 
+
++ These were the top two responses and demonstrates that LEAFF 2017's marketing strategy was effective in encouraging attendees from 2016 to return to LEAFF 2017 and in attracting new attendees.
 
 ## Section 3.3: Audience rating of their LEAFF 2017 experience
+```{r (HIDE) 3.3 Rating- text, echo = FALSE, include = FALSE}
+data_rating <- data_demographics %>% 
+  filter(Category == "Rating of the experience") %>% 
+  mutate(Percent = round(x = Value/sum(Value), digits = 2)) 
+
+txt_rating <- data_rating %>% 
+  filter(Field %in% c("Brilliant       *****", "****"))
+txt_rating <- sum(x = txt_rating$Percent)
+
+if (txt_rating > 0.7) {
+  txt_rating_conc <- c("the majority of", "successful")
+} else if (txt_rating > 0.5) {
+  txt_rating_con <- c("over half of", "successful")
+} else {
+  txt_rating_conc <- c("some", "unsuccessful")
+}
+```
+```{r (SHOW) 3.3 Rating - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 6", fig.width = 5, fig.height = 4}
+lvls <- c("Brilliant       *****", "****", "***", "**", "Poor *")
+data_rating <- data_demographics_master %>% 
+  filter(Category == "Rating of the experience") %>% 
+  mutate(Field = factor(x = Field, levels = lvls))
+func_plot_counts_percents(x = data_rating, 
+                          col_x = "Field",
+                          colour_fill = cb_palette[["cb_green"]], 
+                          plot_title = "Rating of Experience", 
+                          plot_title_x = "Rating")
+```
++ In **Figure 6**, `r toString(paste0(txt_rating * 100, "%"))` of attendees rated their LEAFF 2017 experience as being either **Brilliant \*\*\*\*\* ** (*five stars*) or **Good \*\*\*\* ** (*four stars*).
+
++ This demonstrates that `r toString(txt_rating_conc[1])` attendees enjoyed LEAFF 2017 and that the programme and activities which were part of this were `r toString(txt_rating_conc[2])` in capturing the public's interests and appetite for film and cinema.
 
 ## Section 3.4: Audience main motivation for attending
 
 ## Section 3.5: Audience likelihood of attending future LEAFFs
+
+## Section 3: Summary
+
+***
+
+# Concluding Remarks
 
 ## Full Width Figures
 
