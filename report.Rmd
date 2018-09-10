@@ -55,6 +55,11 @@ rm(vec_packages)
 ***
 
 # Introduction
+
+> _LEAFF aims to champion the growing collaboration in East Asian filmmaking with a philosophy that marks a shift in the cinematic landscape of East Asia, and moves away from cultural and cinematic borders. Our vision is to bring a much wider, eclectic, and diverse programme of films from over 10 countries to show the richness and diversity of the region and its people. We want to draw people in with the familiar, and offer opportunities to see something new._
+>
+> `r quote_footer('--- Hyejung Jeon, Festival Director')`
+
 `r newthought('This paper analyses the data')` collected from the London East Asia Film Festival (LEAFF) 2017. It does so with the intention of providing a summary of how the successful the event was, and to provide a benchmark for future editions of LEAFF.
 
 ***
@@ -393,16 +398,6 @@ system2('pandoc-citeproc', '--version')
 ```
 
 If your version of `pandoc-citeproc` is too low, or you did not set `link-citations: yes` in YAML, references in the HTML output will be placed at the end of the output document.
-
-# Tables
-
-You can use the `kable()` function from the **knitr** package to format tables that integrate well with the rest of the Tufte handout style. The table captions are placed in the margin like figures in the HTML output.
-
-```{r}
-knitr::kable(
-  mtcars[1:6, 1:6], caption = 'A subset of mtcars.'
-)
-```
 
 # Block Quotes
 
