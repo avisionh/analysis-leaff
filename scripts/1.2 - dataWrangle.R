@@ -46,4 +46,15 @@ data_activity_fund_master <- data_activity_fund_master %>%
   select(FilmTitle, VenueName)
 
 
+
+# Data: Activity Fund -----------------------------------------------------
+data_activity_fund_master <- rep(x = data_activity_fund$FilmTitle, times = data_activity_fund$TotalAdmissions)
+
+data_activity_fund_master <- data_activity_fund_master %>% 
+  as.tibble() %>% 
+  left_join(y = data_activity_fund, by = c("value" = "FilmTitle")) %>% 
+  rename(FilmTitle = value) %>% 
+  select(FilmTitle, VenueName)
+  
+
 rm(temp_data)
