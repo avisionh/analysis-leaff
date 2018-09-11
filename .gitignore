@@ -5,3 +5,4 @@
 .Rprofile
 packrat/
 main.R
+packrat/lib*/
