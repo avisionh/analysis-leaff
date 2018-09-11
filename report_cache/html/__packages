@@ -1,0 +1,12 @@
+base
+tufte
+ggplot2
+readxl
+janitor
+magrittr
+dplyr
+tidyr
+tibble
+scales
+stringr
+bindrcpp
