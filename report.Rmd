@@ -60,7 +60,7 @@ rm(vec_packages)
 >
 > `r quote_footer('--- Hyejung Jeon, Festival Director')`
 
-`r newthought('This paper analyses the data')` collected from the London East Asia Film Festival (LEAFF) 2017. It does so with the intention of providing a summary of how the successful the event was, and to provide a benchmark for future editions of LEAFF.
+`r newthought('This paper analyses the data')` collected from the London East Asia Film Festival (LEAFF) 2017. It does so with the intention of providing a summary of how successful the event was, and to provide a benchmark for future editions of LEAFF.
 
 ***
 
@@ -230,7 +230,7 @@ func_plot_counts_percents(x = filter(.data = data_demographics_master, Category 
 _This would appeal most to sponsors who want to improve their brand exposure to different ethnic groups._
 ```
 
-+ Notice in particular that the number of *`r toString(txt_ethnicity_top_two[1,])`* and *`r toString(txt_ethnicity_top_two[2,])`* ethnic groups who attended LEAFF 2017 are very close. This demonstrates that the film festival is effetive in appealing to both an East Asian and non-East Asian audiences.
++ Notice in particular that the number of *`r toString(txt_ethnicity_top_two[1,])`* and *`r toString(txt_ethnicity_top_two[2,])`* ethnic groups who attended LEAFF 2017 are very close. This demonstrates that the film festival is effective in appealing to both an East Asian and non-East Asian audiences.
 
 ## Section 2: Summary
 Given the relatively equal split between genders, the popularity of the festival with younger age groups, and the festival's ability to attract both East Asian and non-East Asian ethnic groups, LEAFF 2017 was effective in catering to the key audience group of younger adults equally between genders, and within this subgroup, attracting a wide range of people from different ehtnic backgrounds.
@@ -355,8 +355,74 @@ func_plot_counts_percents(x = data_rating,
 + This demonstrates that `r toString(txt_rating_conc[1])` attendees enjoyed LEAFF 2017 and that the programme and activities which were part of this were `r toString(txt_rating_conc[2])` in capturing the public's interests and appetite for film and cinema.
 
 ## Section 3.4: Audience main motivation for attending
+```{r (HIDE) 3.4 Motivation - text, echo = FALSE, include = FALSE}
+data_motivation <- data_demographics %>% 
+  filter(Category == "main motivation to attend?") %>% 
+  mutate(Percent = round(x = Value/sum(Value), digits = 2)) 
+
+threshold <- 100
+
+txt_rating <- data_motivation %>% 
+  filter(Value > threshold) %>% 
+  select(Field) %>% 
+  pull()
+
+txt_rating_count <- data_motivation %>% 
+  distinct(Field) %>% 
+  nrow()
+
+if (txt_rating_count > 6) {
+  txt_rating_range <- "diverse and far-reaching"
+} else {
+  txt_rating_range <- "concentrated"
+}
+```
+```{r (SHOW) 3.4 Motivation - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 7", fig.width = 5, fig.height = 4}
+lvls <- data_motivation %>% 
+  arrange(desc(Value)) %>% 
+  select(Field) %>% 
+  pull()
+data_motivation <- data_demographics_master %>% 
+  filter(Category == "main motivation to attend?") %>% 
+  mutate(Field = factor(x = Field, levels = lvls, labels = lvls))
+func_plot_counts_percents(x = data_motivation, 
+                          col_x = "Field",
+                          colour_fill = cb_palette[["cb_yellow"]], 
+                          plot_title = "Main Motivation for Attending", 
+                          plot_title_x = "Motivation Reason") +
+  # add text-wrapping for x labels
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 10))
+```
++ In **Figure 7**, the main reasons most people attended were `r toString(txt_rating)`. ^[*Main reasons* being defined as those reasons which have received more than `r toString(threshold)` responses in the post-film survey.] 
+
++ Indeed **Figure 7** complements **Figure 6** by providing the core reasons for why festival attendees gave such a positive response of their LEAFF 2017 experience. 
+
++ **Figure 7** also demonstrates how `r toString(txt_rating_range)` the reasons for why people attend the festival are, thereby illustrating that the festival caters for a number of preferences, tastes and interests. In this regard, LEAFF 2017 was able to engage with attendees on many levels.
 
 ## Section 3.5: Audience likelihood of attending future LEAFFs
+```{r (HIDE) 3.5 Future - text, echo = FALSE, include = FALSE}
+table_future <- data_demographics %>% 
+  filter(Category == "Likelihood of attending again?") %>% 
+  mutate(Percent = Value/sum(Value)) %>% 
+  select(-Category)
+
+txt_future <- table_future %>% 
+  filter(Field %in% c("Very Likely", "Likely")) %>% 
+  mutate(PercentFinal = sum(x = Percent) * 100) %>% 
+  distinct(PercentFinal) %>% 
+  pull() %>% 
+  signif(digits = 2) %>% 
+  paste0("%")
+```
++ In the table below, `r toString(txt_future)` of respondents said they were either **Likely** or **Very Likely** to attend LEAFF in the future.
+
+```{r (SHOW) 3.5 Future - table, echo = FALSE, fig.margin = TRUE}
+table_future <- table_future %>% 
+  mutate(Percent = paste0(round(x = Percent, digits = 2) * 100, "%"))
+kable(table_future, caption = "_Likelihood of audience returning for future LEAFF editions based on their experience of LEAFF 2017_")
+```
+
++ This demonstrates that the festival was effective in encouraging people to watch more East Asian film and cinema.
 
 ## Section 3: Summary
 
