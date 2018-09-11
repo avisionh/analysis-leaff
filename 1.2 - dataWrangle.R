@@ -6,17 +6,17 @@
 # DESC: wanrgles data into suitable format for analysis
 # SCRIPT DEPENDENCIES: none
 # PACKAGE DEPENDENCIES:
- # 1. 'pacman'
- # 2. 'magrittr'
- # 3. 'dplyr'
- # 4. 'tibble'
+# 1. 'pacman'
+# 2. 'magrittr'
+# 3. 'dplyr'
+# 4. 'tibble'
 
 # NOTES: none
 # ------------------------------------------
 
 # Data import and wrangling
-# vec_packages <- c("magrittr", "dplyr", "tibble")
-# pacman::p_load(char = vec_packages, install = TRUE)
+vec_packages <- c("magrittr", "dplyr", "tibble")
+pacman::p_load(char = vec_packages, install = TRUE)
 
 # Data: Demographics ------------------------------------------------------
 
