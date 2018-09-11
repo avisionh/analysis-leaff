@@ -65,6 +65,9 @@ txt_future <- table_future %>%
   signif(digits = 2) %>% 
   paste0("%")
 ```
+```{r Exec Summary - side-image, echo=FALSE, fig.margin = TRUE}
+#include_graphics('pictures/logo.png')
+```
 From the data analysed in this report, the key findings are:
 
 **The curated film programme at LEAFF 2017 catered to a mainstream and large audience, and more particularly, being of most interest to the key age groups of 20 - 30.**
