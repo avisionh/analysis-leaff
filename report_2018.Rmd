@@ -95,44 +95,48 @@ From the data analysed in this report, the key findings are:
 `r newthought("This section presents")` key analyis of the festival's performance data.
 
 ## Section 3.3: Audience rating of their LEAFF 2018 experience
-```{r (HIDE) 3.3 Rating, echo = FALSE, include = FALSE}
+```{r (HIDE) 1.1 Rating - text, echo = FALSE, include = FALSE}
+
 data_rating <- data_survey %>% 
   filter(str_detect(string = Question, pattern = "2. How likely")) %>% 
   # convert to integer to allow summation
-  mutate(Response = as.integer(Response)) %>% 
-  # select only columns we need to group_by
-  select(Choice, Response) %>% 
-  group_by(Choice) %>% 
-  summarise(Total = sum(Response, na.rm = TRUE))
+  mutate(Response = as.integer(Response))
+  
 
-data_rating <- data_demographics %>% 
-  filter(Category == "Rating of the experience") %>% 
-  mutate(Percent = round(x = Value/sum(Value), digits = 2)) 
-
-txt_rating <- data_rating %>% 
-  filter(Field %in% c("Brilliant       *****", "****"))
-txt_rating <- sum(x = txt_rating$Percent)
-
-if (txt_rating > 0.7) {
-  txt_rating_conc <- c("the majority of", "successful")
-} else if (txt_rating > 0.5) {
-  txt_rating_con <- c("over half of", "successful")
-} else {
-  txt_rating_conc <- c("some", "unsuccessful")
-}
+# data_rating <- data_rating %>% 
+#   filter(Category == "Rating of the experience") %>% 
+#   mutate(Percent = round(x = Value/sum(Value), digits = 2)) 
+# 
+# txt_rating <- data_rating %>% 
+#   filter(Field %in% c("Brilliant       *****", "****"))
+# txt_rating <- sum(x = txt_rating$Percent)
+# 
+# if (txt_rating > 0.7) {
+#   txt_rating_conc <- c("the majority of", "successful")
+# } else if (txt_rating > 0.5) {
+#   txt_rating_con <- c("over half of", "successful")
+# } else {
+#   txt_rating_conc <- c("some", "unsuccessful")
+# }
 ```
-```{r (SHOW) 3.3 Rating - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 6", fig.width = 5, fig.height = 4}
-lvls <- c("Brilliant       *****", "****", "***", "**", "Poor *")
-data_rating <- data_demographics_master %>% 
-  filter(Category == "Rating of the experience") %>% 
-  mutate(Field = factor(x = Field, levels = lvls))
+```{r (SHOW) 1.1 Rating - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 1", fig.width = 5, fig.height = 4}
+
+# Create levels so we capture all responses and in right order
+lvls <- c("Very likely", "Likely", "Don't know", "Unlikely")
+data_rating <- data_rating %>% 
+  filter(Response == 1) %>% 
+  # select only columns we need
+  select(Choice, Response) %>% 
+  # force factor order
+  mutate(Choice = factor(x = Choice, levels = lvls))
+# Plot the rating
 func_plot_counts_percents(x = data_rating, 
-                          col_x = "Field",
+                          col_x = "Choice",
                           colour_fill = cb_palette[["cb_green"]], 
                           plot_title = "Rating of Experience", 
-                          plot_title_x = "Rating")
+                          plot_title_x = "How likely are you to attend LEAFF again?")
 ```
-+ In **Figure 6**, `r toString(paste0(txt_rating * 100, "%"))` of attendees rated their LEAFF 2017 experience as being either **Brilliant \*\*\*\*\* ** (*five stars*) or **Good \*\*\*\* ** (*four stars*).
++ In **Figure 1**, `r toString(paste0(txt_rating * 100, "%"))` of attendees rated their LEAFF 2017 experience as being either **Brilliant \*\*\*\*\* ** (*five stars*) or **Good \*\*\*\* ** (*four stars*).
 
 + This demonstrates that `r toString(txt_rating_conc[1])` attendees enjoyed LEAFF 2017 and that the programme and activities which were part of this were `r toString(txt_rating_conc[2])` in capturing the public's interests and appetite for film and cinema.
 
