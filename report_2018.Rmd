@@ -147,7 +147,7 @@ func_plot_counts_percents(x = data_rating,
 + This demonstrates that `r toString(txt_rating_conc[1])` attendees enjoyed LEAFF 2017 and that the programme and activities which were part of this were `r toString(txt_rating_conc[2])` in capturing the public's interests and appetite for film and cinema.
 
 ## Section 1.2: Recommending LEAFF to friends or colleagues
-```{r (HIDE) 3.5 Future - text, echo = FALSE, include = FALSE}
+```{r (HIDE) 1.2 Recommend - text, echo = FALSE, include = FALSE}
 
 # Create levels so we capture all responses and in right order
 lvls <- c("Very likely", "Likely", "Unlikely")
@@ -178,22 +178,57 @@ if (txt_recommend > 0.5 & txt_rating > 0.5) {
 
 + This `r toString(txt_recommend_conc)` the findings made in *Section 1.1* where `r toString(txt_rating)` of respondents said they were **Very likely** or **Likely** to attend future LEAFFs. 
 
-```{r (SHOW) 3.5 Future - table, echo = FALSE, fig.margin = TRUE}
-table_future <- table_future %>% 
+```{r (SHOW) 1.2 Recommend - table, echo = FALSE, fig.margin = TRUE}
+table_future <- table_recommend %>% 
   mutate(Percent = paste0(round(x = Percent, digits = 2) * 100, "%"))
-pander(x = table_future, 
-       caption = "_Likelihood of audience returning for future LEAFF editions based on their experience of LEAFF 2017_")
+pander(x = table_recommend, 
+       caption = "_Likelihood of audience recommending LEAFF to friends or colleagues_")
 ```
 
-## Section 1.2: Audience main motivation for attending
-```{r (HIDE) 3.4 Motivation - text, echo = FALSE, include = FALSE}
-data_motivation <- data_demographics %>% 
-  filter(Category == "main motivation to attend?") %>% 
-  mutate(Percent = round(x = Value/sum(Value), digits = 2)) 
+## Section 1.3: Number of films attended/attending
+```{r (HIDE) 1.3 No. of screenings - text, echo = FALSE, include = FALSE}
+data_no_film <- data_survey %>% 
+  filter(str_detect(string = Question, pattern = "15. How many movies")) %>% 
+  mutate(Response = as.integer(Response)) 
 
-threshold <- 100
+txt_no_film <- data_no_film %>% 
+  select(Choice, Response) %>% 
+  group_by(Choice) %>% 
+  summarise(Total = sum(x = Response, na.rm = TRUE)) %>% 
+  arrange(desc(Total)) %>% 
+  head(1) %>% 
+  select(Choice) %>% 
+  pull()
 
-txt_motivation <- data_motivation %>% 
+# Logic to check if high rating of festival is linked to number of screenings
+if (txt_rating > 0.65 & (txt_no_film == "14+" | txt_no_film == "8-13")) {
+  txt_no_film_conc <- c("supports", "enjoyed their experience so much they wanted to watch more screenings")
+} else {
+  txt_no_film_conc <- c("confilcts", "may have other reasons for not attending more screenings, such as work or studies")
+}
+```
+
+```{r (SHOW) 1.3 No. ofscreenings - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 2", fig.width = 5, fig.height = 4}
+
+# Create levels so we capture all responses and in right order
+lvls <- c("1-3", "4-7", "8-13", "14+")
+
+data_no_film <- data_no_film %>% 
+  mutate(Choice = factor(x = Choice, levels = lvls)) %>% 
+  filter(Response == 1)
+func_plot_counts_percents(x = data_no_film,
+                         col_x = "Choice",
+                         colour_fill = cb_palette["cb_dark_blue"],
+                         plot_title = "Number of Screenings",
+                         plot_title_x = "Number of screenings will attend/have attended")
+
+```
++ In **Figure 2**, can see that the largest range of films survey respondents have seen or plan to see is `r toString(txt_no_film)`.
+
++ This `r toString(txt_no_film_conc[1])` the earlier findings that `r toString(txt_rating)` of respondents were **Very likely** or **Likely** to return to future LEAFFs, which suggests they `r toString(txt_no_film_conc)`.
+
+```{r (HIDE) 1.3 Motivation - text, echo = FALSE, include = FALSE}
+txt_motivation <- data_no_film %>% 
   filter(Value > threshold) %>% 
   select(Field) %>% 
   pull()
@@ -208,7 +243,7 @@ if (txt_motivation_count > 6) {
   txt_motivation_range <- "concentrated"
 }
 ```
-```{r (SHOW) 3.4 Motivation - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 7", fig.width = 5, fig.height = 4}
+```{r (SHOW) 1.3 Motivation - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 7", fig.width = 5, fig.height = 4}
 lvls <- data_motivation %>% 
   arrange(desc(Value)) %>% 
   select(Field) %>% 
