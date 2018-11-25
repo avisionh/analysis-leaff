@@ -227,47 +227,32 @@ func_plot_counts_percents(x = data_no_film,
 
 + This `r toString(txt_no_film_conc[1])` the earlier findings that `r toString(txt_rating)` of respondents were **Very likely** or **Likely** to return to future LEAFFs, which suggests they `r toString(txt_no_film_conc)`.
 
-```{r (HIDE) 1.3 Motivation - text, echo = FALSE, include = FALSE}
-txt_motivation <- data_no_film %>% 
-  filter(Value > threshold) %>% 
-  select(Field) %>% 
+## Section 1.4: Motivations for attending LEAFF
+
+```{r (HIDE) 1.4 Motivation - text, echo = FALSE, include = FALSE}
+data_motivation <- data_survey %>% 
+  filter(str_detect(string = Question, pattern = "3. What is the main motivation")) %>% 
+  mutate(Response = as.integer(Response)) %>% 
+  select(Choice, Response) %>% 
+  group_by(Choice) %>% 
+  summarise(Total = sum(Response, na.rm = TRUE)) %>% 
+  mutate(Percent = round(x = Total/sum(Total), digits = 2))
+
+# Create text for top threee reasons for attending festival
+txt_motivation <- data_motivation %>% 
+  arrange(desc(Total)) %>% 
+  head(3) %>% 
+  mutate(String = paste0(Choice, sep = " (", paste0(Percent*100, "%"), sep = ")")) %>% 
+  select(String) %>% 
   pull()
-
-txt_motivation_count <- data_motivation %>% 
-  distinct(Field) %>% 
-  nrow()
-
-if (txt_motivation_count > 6) {
-  txt_motivation_range <- "diverse and far-reaching"
-} else {
-  txt_motivation_range <- "concentrated"
-}
+txt_motivation <- paste0(txt_motivation[1], ", ", txt_motivation[2], " and ", txt_motivation[3])
 ```
-```{r (SHOW) 1.3 Motivation - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 7", fig.width = 5, fig.height = 4}
-lvls <- data_motivation %>% 
-  arrange(desc(Value)) %>% 
-  select(Field) %>% 
-  pull()
-data_motivation <- data_demographics_master %>% 
-  filter(Category == "main motivation to attend?") %>% 
-  mutate(Field = factor(x = Field, levels = lvls, labels = lvls))
-func_plot_counts_percents(x = data_motivation, 
-                          col_x = "Field",
-                          colour_fill = cb_palette[["cb_yellow"]], 
-                          plot_title = "Main Motivation for Attending", 
-                          plot_title_x = "Motivation Reason") +
-  # add text-wrapping for x labels
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 10))
-```
-+ In **Figure 7**, the main reasons most people attended were `r toString(txt_motivation)`. ^[*Main reasons* being defined as those reasons which have received more than `r toString(threshold)` responses in the post-film survey.] 
++ Digging further into why `r toString(txt_rating)` of survey respondents enjoyed their LEAFF experience such that they are **Very likely** or **Likely** to attend, we see the top three reasons for why they wanted to attend LEAFF were `r toString(txt_motivation)`.
 
-+ Indeed **Figure 7** complements **Figure 6** by providing the core reasons for why festival attendees gave such a positive response of their LEAFF 2017 experience. 
++ This demonstrates that LEAFF is more than just a festival that screens films, but it also caters for film fans' other interests.
 
-+ **Figure 7** also demonstrates how `r toString(txt_motivation_range)` the reasons for why people attend the festival are, thereby illustrating that the festival caters for a number of preferences, tastes and interests. In this regard, LEAFF 2017 was able to engage with attendees on many levels.
-
-
-## Section 3.2: Retaining old audiences and capturing new audiences
-```{r (HIDE) 3.2 Retention - text, echo = FALSE, include = FALSE}
+## Section 1.5: Retaining old audiences and capturing new audiences
+```{r (HIDE) 1.5 Retention - text, echo = FALSE, include = FALSE}
 data_retention <- data_demographics %>% 
   filter(Category == "New   Audience" & Field != "Prefer not to say / did not answer") %>% 
   mutate(Percent = round(x = Value/sum(Value), digits = 2)) %>% 
@@ -283,7 +268,9 @@ txt_retention_second <- paste0(select(.data = txt_retention_second, Value),
                               " of LEAFF 2017 attendees saying ", 
                               "\"", select(.data = txt_retention_second, Field), "\"")
 ```
-```{r (SHOW) 3.2 Retention - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 5", fig.width = 6, fig.height = 5}
+```{r (SHOW) 1.5 Retention - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 5", fig.width = 6, fig.height = 5}
+
+# Use pie by separating out those who went before and those whose first time it is
 lvls <- c("Been to LEAFF 2015", "Been to LEAFF 2016",
           "Been to both", "This is my first time")
 func_plot_pie(x = data_retention, col_counts = "Percent", col_category = "Field", 
