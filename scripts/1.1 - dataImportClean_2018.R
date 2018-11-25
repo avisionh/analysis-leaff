@@ -41,8 +41,3 @@ data_survey <- data_survey %>%
          Film = as.factor(x = Film),
          Question = as.factor(x = Question),
          Choice = as.factor(x = Choice))
-           
-           
-           
-           ifelse(Choice == "01-Mar", "1-3", 
-                         Choice))
