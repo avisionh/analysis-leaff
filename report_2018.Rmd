@@ -20,7 +20,7 @@ link-citations: yes
 library(tufte)
 
 # Load relevant packages for project
-vec_packages <- c("stringr", "tidyselect")
+vec_packages <- c("stringr", "tidyselect", "ggplot2")
 pacman::p_load(char = vec_packages, install = TRUE)
 
 # invalidate cache when the tufte version changes
@@ -30,8 +30,8 @@ options(htmltools.dir.version = FALSE)
 knitr::opts_chunk$set(results = "asis", warning = FALSE, message = FALSE)
 
 # Load scripts
-source("scripts/0 - functions.R")
-source("scripts/1.1 - dataImportClean.R")
+source("scripts/0 - functions_2018.R")
+source("scripts/1.1 - dataImportClean_2018.R")
 
 # Turn off scientific notation
 options(scipen = 999, expressions = 10000)
@@ -91,44 +91,50 @@ From the data analysed in this report, the key findings are:
 
 ***
 
-# Section 3: Key Performance Metrics
+# Section 1: Key Performance Metrics
 `r newthought("This section presents")` key analyis of the festival's performance data.
 
-## Section 3.3: Audience rating of their LEAFF 2018 experience
+## Section 1.1: Audience rating of their LEAFF experience
 ```{r (HIDE) 1.1 Rating - text, echo = FALSE, include = FALSE}
 
+# Wrangle data for generating required text and plot
 data_rating <- data_survey %>% 
   filter(str_detect(string = Question, pattern = "2. How likely")) %>% 
   # convert to integer to allow summation
   mutate(Response = as.integer(Response))
-  
 
-# data_rating <- data_rating %>% 
-#   filter(Category == "Rating of the experience") %>% 
-#   mutate(Percent = round(x = Value/sum(Value), digits = 2)) 
-# 
-# txt_rating <- data_rating %>% 
-#   filter(Field %in% c("Brilliant       *****", "****"))
-# txt_rating <- sum(x = txt_rating$Percent)
-# 
-# if (txt_rating > 0.7) {
-#   txt_rating_conc <- c("the majority of", "successful")
-# } else if (txt_rating > 0.5) {
-#   txt_rating_con <- c("over half of", "successful")
-# } else {
-#   txt_rating_conc <- c("some", "unsuccessful")
-# }
+# Generate text for report
+txt_rating <- data_rating %>% 
+  # construct right table structure to generate text required
+  select(Choice, Response) %>% 
+  group_by(Choice) %>% 
+  summarise(Total = sum(x = Response, na.rm = TRUE)) %>% 
+  mutate(Percent = round(x = Total/sum(Total), digits = 2)) %>% 
+  # pull info for report
+  filter(Choice %in% c("Very likely", "Likely"))
+txt_rating <- sum(x = txt_rating$Percent)
+
+if (txt_rating > 0.7) {
+  txt_rating_conc <- c("the majority of", "successful")
+} else if (txt_rating > 0.5) {
+  txt_rating_con <- c("over half of", "successful")
+} else {
+  txt_rating_conc <- c("some", "unsuccessful")
+}
 ```
+
 ```{r (SHOW) 1.1 Rating - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 1", fig.width = 5, fig.height = 4}
 
 # Create levels so we capture all responses and in right order
 lvls <- c("Very likely", "Likely", "Don't know", "Unlikely")
+
 data_rating <- data_rating %>% 
   filter(Response == 1) %>% 
   # select only columns we need
   select(Choice, Response) %>% 
   # force factor order
   mutate(Choice = factor(x = Choice, levels = lvls))
+
 # Plot the rating
 func_plot_counts_percents(x = data_rating, 
                           col_x = "Choice",
@@ -136,11 +142,50 @@ func_plot_counts_percents(x = data_rating,
                           plot_title = "Rating of Experience", 
                           plot_title_x = "How likely are you to attend LEAFF again?")
 ```
-+ In **Figure 1**, `r toString(paste0(txt_rating * 100, "%"))` of attendees rated their LEAFF 2017 experience as being either **Brilliant \*\*\*\*\* ** (*five stars*) or **Good \*\*\*\* ** (*four stars*).
++ In **Figure 1**, `r toString(paste0(txt_rating * 100, "%"))` of attendees rated their LEAFF 2018 experience as being so good that they are either **Very likely** or **Likely** to attend the festival again in the future.
 
 + This demonstrates that `r toString(txt_rating_conc[1])` attendees enjoyed LEAFF 2017 and that the programme and activities which were part of this were `r toString(txt_rating_conc[2])` in capturing the public's interests and appetite for film and cinema.
 
-## Section 3.4: Audience main motivation for attending
+## Section 1.2: Recommending LEAFF to friends or colleagues
+```{r (HIDE) 3.5 Future - text, echo = FALSE, include = FALSE}
+
+# Create levels so we capture all responses and in right order
+lvls <- c("Very likely", "Likely", "Unlikely")
+
+# Construct table for presentation
+table_recommend <- data_survey %>% 
+  filter(str_detect(string = Question, pattern = "23. How likely is")) %>% 
+  mutate(Choice = factor(x = Choice, levels = lvls), Response = as.integer(Response)) %>% 
+  select(Choice, Response) %>% 
+  group_by(Choice) %>% 
+  summarise(Total = sum(Response, na.rm = TRUE)) %>% 
+  mutate(Percent = round(x = Total/sum(Total), digits = 2)) 
+
+# Generate text
+txt_recommend <- table_future %>% 
+  filter(Choice %in% c("Very Likely", "Likely")) %>% 
+  mutate(PercentFinal = sum(x = Percent) * 100) %>% 
+  distinct(PercentFinal) %>% 
+  pull()
+
+if (txt_recommend > 0.5 & txt_rating > 0.5) {
+  txt_recommend_conc <- "reinforces"
+} else if((txt_recommend < 0.5 & txt_rating > 0.5) | (txt_recommend > 0.5 & txt_recommend < 0.5)) {
+  txt_recommend_conc <- "conflicts with"
+}
+```
++ In the table below, `r toString(paste0(round(x = txt_recommend, digits = 2)), "%")` of respondents said they were either **Very likely** or **Likely** to recommend a friend or colleague to attend LEAFF.
+
++ This `r toString(txt_recommend_conc)` the findings made in *Section 1.1* where `r toString(txt_rating)` of respondents said they were **Very likely** or **Likely** to attend future LEAFFs. 
+
+```{r (SHOW) 3.5 Future - table, echo = FALSE, fig.margin = TRUE}
+table_future <- table_future %>% 
+  mutate(Percent = paste0(round(x = Percent, digits = 2) * 100, "%"))
+pander(x = table_future, 
+       caption = "_Likelihood of audience returning for future LEAFF editions based on their experience of LEAFF 2017_")
+```
+
+## Section 1.2: Audience main motivation for attending
 ```{r (HIDE) 3.4 Motivation - text, echo = FALSE, include = FALSE}
 data_motivation <- data_demographics %>% 
   filter(Category == "main motivation to attend?") %>% 
@@ -184,32 +229,6 @@ func_plot_counts_percents(x = data_motivation,
 + Indeed **Figure 7** complements **Figure 6** by providing the core reasons for why festival attendees gave such a positive response of their LEAFF 2017 experience. 
 
 + **Figure 7** also demonstrates how `r toString(txt_motivation_range)` the reasons for why people attend the festival are, thereby illustrating that the festival caters for a number of preferences, tastes and interests. In this regard, LEAFF 2017 was able to engage with attendees on many levels.
-
-## Section 3.5: Audience likelihood of attending future LEAFFs
-```{r (HIDE) 3.5 Future - text, echo = FALSE, include = FALSE}
-table_future <- data_demographics %>% 
-  filter(Category == "Likelihood of attending again?") %>% 
-  mutate(Percent = Value/sum(Value)) %>% 
-  select(-Category)
-
-txt_future <- table_future %>% 
-  filter(Field %in% c("Very Likely", "Likely")) %>% 
-  mutate(PercentFinal = sum(x = Percent) * 100) %>% 
-  distinct(PercentFinal) %>% 
-  pull() %>% 
-  signif(digits = 2) %>% 
-  paste0("%")
-```
-+ In the table below, `r toString(txt_future)` of respondents said they were either **Likely** or **Very Likely** to attend LEAFF in the future.
-
-```{r (SHOW) 3.5 Future - table, echo = FALSE, fig.margin = TRUE}
-table_future <- table_future %>% 
-  mutate(Percent = paste0(round(x = Percent, digits = 2) * 100, "%"))
-pander(x = table_future, 
-       caption = "_Likelihood of audience returning for future LEAFF editions based on their experience of LEAFF 2017_")
-```
-
-+ This demonstrates that the festival was effective in encouraging people to watch more East Asian film and cinema.
 
 
 ## Section 3.2: Retaining old audiences and capturing new audiences
