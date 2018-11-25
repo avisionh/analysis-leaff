@@ -41,3 +41,11 @@ data_survey <- data_survey %>%
          Film = as.factor(x = Film),
          Question = as.factor(x = Question),
          Choice = as.factor(x = Choice))
+
+# Interpretation-specific cleaning
+# DESC: Cleaning dataframe where we had to make some interpretations 
+#       when translating the 2017 version of the survey responses to 2018
+data_survey <- data_survey %>% 
+  mutate(Choice = str_replace_all(string = Choice, 
+                              pattern = "The director\\(s\\)", 
+                              replacement = "The director(s) and/or actor(s)"))
