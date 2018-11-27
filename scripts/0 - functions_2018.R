@@ -64,7 +64,7 @@ func_plot_pie <- function(x, col_counts, col_category, plot_title, factor_levels
     #geom_text(mapping = aes(y = get(col_label), label = get(col_label, position = theta("y")))) +
     geom_text(size = 3, position = position_stack(vjust = 0.5)) +
     labs(title = paste0("Pie Chart: ", plot_title),
-         subtitle = "LEAF 2017",
+         subtitle = "LEAF 2018",
          fill = "Key") +
     theme(plot.title = element_text(face = "bold", hjust = 0.5),
           plot.subtitle = element_text(face = "bold", hjust = 0.5),
