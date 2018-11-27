@@ -253,33 +253,60 @@ txt_motivation <- paste0(txt_motivation[1], ", ", txt_motivation[2], " and ", tx
 
 ## Section 1.5: Retaining old audiences and capturing new audiences
 ```{r (HIDE) 1.5 Retention - text, echo = FALSE, include = FALSE}
-data_retention <- data_demographics %>% 
-  filter(Category == "New   Audience" & Field != "Prefer not to say / did not answer") %>% 
-  mutate(Percent = round(x = Value/sum(Value), digits = 2)) %>% 
-  arrange(desc(Value))
+data_retention <- data_survey %>% 
+  filter(str_detect(string = Question, pattern = "1. Did you attend")) %>% 
+  mutate(Response = as.integer(Response),
+         Choice_New = ifelse(str_detect(string = Choice, pattern = "Yes"), "Yes", Choice))
 
-txt_retention_first <- data_retention %>% 
-  head(1)
-txt_retention_first <- paste0(select(.data = txt_retention_first, Value),
-                              " of LEAFF 2017 attendees saying ", 
-                              "\"", select(.data = txt_retention_first, Field), "\"")
-txt_retention_second <- data_retention[2, ]
-txt_retention_second <- paste0(select(.data = txt_retention_second, Value),
-                              " of LEAFF 2017 attendees saying ", 
-                              "\"", select(.data = txt_retention_second, Field), "\"")
+# Generate text for those who have returned from previous years
+retention_table <- data_retention %>% 
+  select(Choice, Response) %>% 
+  filter(Choice != "This is my first!") %>% 
+  group_by(Choice) %>% 
+  summarise(Total = sum(x = Response, na.rm = TRUE)) %>% 
+  mutate(Percent = round(x = Total/sum(Total), digits = 2) * 100,
+         Text = paste0(Choice, " (", Percent, "%)")) 
+txt_retention <- retention_table %>% 
+  select(Text) %>% 
+  # pull from dataframe to vector
+  pull()
+
 ```
-```{r (SHOW) 1.5 Retention - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 5", fig.width = 6, fig.height = 5}
+
+```{r (SHOW) 1.5 Retention - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 3", fig.width = 6, fig.height = 5}
 
 # Use pie by separating out those who went before and those whose first time it is
-lvls <- c("Been to LEAFF 2015", "Been to LEAFF 2016",
-          "Been to both", "This is my first time")
-func_plot_pie(x = data_retention, col_counts = "Percent", col_category = "Field", 
+lvls <- c("This is my first!", "Yes")
+
+data_retention <- data_retention %>% 
+  select(Choice_New, Response) %>% 
+  group_by(Choice_New) %>% 
+  summarise(Total = sum(x = Response, na.rm = TRUE)) %>% 
+  mutate(Percent = round(x = Total/sum(Total), digits = 2))
+
+txt_retention_new <- data_retention %>% 
+  filter(Choice_New == "This is my first!") %>% 
+  select(Percent) %>% 
+  pull()
+if (1 - txt_retention_new > 0.35) {
+  txt_retention_stay <- c("sizeable" ,"effective")
+} else
+  txt_retention_stay <- c("small", "ineffective")
+
+
+func_plot_pie(x = data_retention, col_counts = "Percent", col_category = "Choice_New", 
               plot_title = "Audience Retention", factor_levels = lvls)
 ```
-+ In **Figure 5**, we have `r toString(txt_retention_first)` and `r toString(txt_retention_second)`. 
++ In **Figure 3**, we have `r toString(paste0(txt_retention_new, "%"))` of respondents saying this is their first time coming to the festival. 
 
-+ These were the top two responses and demonstrates that LEAFF 2017's marketing strategy was effective in encouraging attendees from 2016 to return to LEAFF 2017 and in attracting new attendees.
++ Of the remaining `r toString(paste0(1 - txt_retention_new), "%")` of respondents who have returned from previous festivals, we have the following breakdown:
+    - `r toString(txt_retention[1])`
+    - `r toString(txt_retention[2])`
+    - `r toString(txt_retention[3])`
 
++ As a `r toString(txt_retention_stay[1])` proportion of attendees have returned to LEAFF from previous years, then this demonstrates that previous LEAFFs were `r toString(txt_retention_stay[2])` in encouraging people to return for this year's festival.
+
+***
 
 ## Section 3: Summary
 + Given that a high and similar number of `r toString(txt_retention_first)` and `r toString(txt_retention_second)`, `r toString(paste0(txt_rating * 100, "%"))` of attendees rated their LEAFF 2017 experience as being either **Brilliant \*\*\*\*\* ** (*five stars*) or **Good \*\*\*\* ** (*four stars*) then this demonstrates that the festival was left a lasting impression on audiences such that `r toString(txt_future)` of respondents are either **Likely** or **Very Likely** to attend LEAFF in the future.
