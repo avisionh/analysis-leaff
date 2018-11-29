@@ -86,6 +86,9 @@ knitr::include_graphics('pictures/director.jpg')
 
 ***
 # Section 1: Quotes from the Audience
+```{r Quotes - side-image, echo = FALSE, fig.margin = TRUE}
+knitr::include_graphics('pictures/audience.jpg')
+```
 `r newthought("This section presents")` some of the comments made by audience members who have attended LEAFF 2018.
 
 > _"Very positive, fascinating and varied films; informative discussion, nice atmosphere."_
