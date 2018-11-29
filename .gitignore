@@ -6,3 +6,5 @@
 packrat/
 main.R
 packrat/lib*/
+report.html
+report_files/
