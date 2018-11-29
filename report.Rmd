@@ -1,7 +1,7 @@
 ---
 title: "Analysis: How successful was LEAFF 2018?"
 subtitle: "[London East Asia Film Festival (LEAFF) 2018](https://www.leaff.org.uk/)"
-author: "[Avision Ho](https://github.com/avisionh) and Chelsea Do Hyung Kim" 
+author: "[Avision Ho](https://github.com/avisionh), Strategy" 
 date: "`r Sys.Date()`"
 output:
   tufte::tufte_html: default
@@ -60,17 +60,17 @@ source("scripts/2018/2.5 - reportRetention.R")
 ```{r Exec Summary - side-image, echo = FALSE, fig.margin = TRUE}
 knitr::include_graphics('pictures/logo.jpg')
 ```
-From the data analysed in this report, the key findings are:
+From the post-film survey data, the key findings drawn from those who have attended the festival and filled out a survey are:
 
-**Survey respondents enjoyed LEAFF 2018 so much that `r toString(paste0(txt_rating * 100, "%"))` of them will return for future editions of LEAFF.**
+**`r toString(paste0(txt_rating * 100, "%"))` enjoyed LEAFF 2018 so much that will return for future editions of LEAFF.**
 
-**Survey respondents enjoyed LEAFF 2018 so much that `r toString(paste0(txt_recommend * 100, "%"))` of them will recommend a friend or colleague to attend LEAFF.**
+**`r toString(paste0(txt_recommend * 100, "%"))` enjoyed LEAFF 2018 so much that they would recommend a friend or colleague to attend LEAFF.**
 
-**Most survey respondents answered that they have watched or expect to watch `r toString(txt_no_film)` films during LEAFF 2018 as they `r toString(txt_no_film_conc[2])`.**
+**Most said that they have watched or expect to watch `r toString(txt_no_film)` films during LEAFF 2018 as they `r toString(txt_no_film_conc[2])`.**
 
-**The top three reasons for why survey respondents wanted to attend LEAFF were *`r toString(txt_motivation)`*.**
+***`r toString(txt_motivation)`* were the top three reasons why they wanted to attend LEAFF 2018.**
 
-**`r toString(paste0(txt_retention_new * 100, "%"))` of survey respondents said this is their first time coming to the festival, showing that LEAFF was `r toString(txt_retention_stay[2])` in attracting new audience memebers and retaining previous members.**
+**`r toString(paste0(txt_retention_new * 100, "%"))` said this is their first time coming to the festival, showing that LEAFF was `r toString(txt_retention_stay[2])` in attracting new audience members and retaining previous members.**
 
 ***
 
@@ -78,19 +78,42 @@ From the data analysed in this report, the key findings are:
 ```{r Intro - side-image, echo = FALSE, fig.margin = TRUE}
 knitr::include_graphics('pictures/director.jpg')
 ```
-> _LEAFF aims to champion the growing collaboration in East Asian filmmaking with a philosophy that marks a shift in the cinematic landscape of East Asia, and moves away from cultural and cinematic borders. Our vision is to bring a much wider, eclectic, and diverse programme of films from over 10 countries to show the richness and diversity of the region and its people. We want to draw people in with the familiar, and offer opportunities to see something new._
+> _The London East Asia Film Festival (LEAFF) is the largest film festival of its kind in London, introducing the diversity of East Asian culture though film. Our world needs, more than ever before, a medium to bridge cultural understanding. There is no better way than through film. LEAFF represents a culmination of the most inspiring, engaging and inclusive cross-cultural programming. LEAFF brings the best of East Asian cinema every year to the capital and aims to champion the growing collaboration in East Asian filmmaking._
 >
 > `r quote_footer('--- Hyejung Jeon, Festival Director')`
 
 `r newthought('This paper analyses the data')` collected from the London East Asia Film Festival (LEAFF) 2018. It does so with the intention of providing a summary of how successful the event was, and to provide a benchmark for future editions 
 
 ***
+# Section 1: Quotes from the Audience
+```{r Quotes - side-image, echo = FALSE, fig.margin = TRUE}
+knitr::include_graphics('pictures/audience.jpg')
+```
+`r newthought("This section presents")` some of the comments made by audience members who have attended LEAFF 2018.
 
-# Section 1: Key Performance Metrics
+> _"Very positive, fascinating and varied films; informative discussion, nice atmosphere."_
+
+> _"Pleasant and welcoming - good for going as a solo customer."_
+
+> _"A great chance to see films you otherwise would not."_
+
+> _"A meaningful and memorable experience."_
+
+> _"Eye-opening; new but at home."_
+
+> _"Intensive and inspiring"_
+
+> _"Mind-opening"_
+
+> `r quote_footer('--- LEAFF 2018 audience members')`
+
+***
+
+# Section 2: Key Performance Metrics
 `r newthought("This section presents")` key analyis of the festival's performance data.
 
-## Section 1.1: How much did the audience enjoy LEAFF 2018?
-```{r (SHOW) 1.1 Rating - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 1", fig.width = 5, fig.height = 4}
+## Section 2.1: How much did the audience enjoy LEAFF 2018?
+```{r (SHOW) 2.1 Rating - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 1", fig.width = 5, fig.height = 4}
 
 # Create levels so we capture all responses and in right order
 lvls <- c("Very likely", "Likely", "Don't know", "Unlikely")
@@ -113,18 +136,18 @@ func_plot_counts_percents(x = data_rating,
 
 + This demonstrates that `r toString(txt_rating_conc[1])` attendees enjoyed LEAFF 2018 and that the programme and activities which were part of this were `r toString(txt_rating_conc[2])` in capturing the public's interests and appetite for film and cinema.
 
-## Section 1.2: How likely are the audience to recommend LEAFF to friends and colleagues?
+## Section 2.2: How likely are the audience to recommend LEAFF to friends and colleagues?
 + In the table below, `r toString(paste0(txt_recommend * 100, "%"))` of respondents said they were either **Very likely** or **Likely** to recommend a friend or colleague to attend LEAFF.
 
 + This `r toString(txt_recommend_conc)` the findings made in *Section 1.1* where `r toString(paste0(txt_rating * 100, "%"))` of respondents said they were **Very likely** or **Likely** to attend future LEAFFs. 
 
-```{r (SHOW) 1.2 Recommend - table, echo = FALSE, fig.margin = TRUE}
+```{r (SHOW) 2.2 Recommend - table, echo = FALSE, fig.margin = TRUE}
 pander(x = table_future, 
        caption = "_Likelihood of audience recommending LEAFF to friends or colleagues_")
 ```
 
-## Section 1.3: How many do screenings does our audience see?
-```{r (SHOW) 1.3 No. ofscreenings - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 2", fig.width = 5, fig.height = 4}
+## Section 2.3: How many do screenings does our audience see?
+```{r (SHOW) 2.3 No. ofscreenings - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 2", fig.width = 5, fig.height = 4}
 
 # Create levels so we capture all responses and in right order
 lvls <- c("1-3", "4-7", "8-13", "14+")
@@ -143,13 +166,13 @@ func_plot_counts_percents(x = data_no_film,
 
 + This `r toString(txt_no_film_conc[1])` the earlier findings that `r toString(paste0(txt_rating * 100, "%"))` of respondents were **Very likely** or **Likely** to return to future LEAFFs, which suggests they `r toString(txt_no_film_conc)`.
 
-## Section 1.4: Why does our audience come to LEAFF?
+## Section 2.4: Why does our audience come to LEAFF?
 + Digging further into why `r toString(paste0(txt_rating * 100, "%"))` of survey respondents enjoyed their LEAFF experience such that they are **Very likely** or **Likely** to attend, we see the top three reasons for why they wanted to attend LEAFF were *`r toString(txt_motivation)`*.
 
 + This demonstrates that LEAFF is more than just a festival that screens films, but it also caters for film fans' other interests.
 
-## Section 1.5: How many previous and new audiences came to LEAFF 2018?
-```{r (SHOW) 1.5 Retention - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 3", fig.width = 6, fig.height = 5}
+## Section 2.5: How many previous and new audiences came to LEAFF 2018?
+```{r (SHOW) 2.5 Retention - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 3", fig.width = 6, fig.height = 5}
 lvls <- c("This is my first!", "Yes")
 
 func_plot_pie(x = table_retention, col_counts = "Percent", col_category = "Choice_New", 
