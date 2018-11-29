@@ -1,7 +1,7 @@
 ---
 title: "Analysis: How successful was LEAFF 2018?"
 subtitle: "[London East Asia Film Festival (LEAFF) 2018](https://www.leaff.org.uk/)"
-author: "[Avision Ho](https://github.com/avisionh)" 
+author: "[Avision Ho](https://github.com/avisionh), Strategy" 
 date: "`r Sys.Date()`"
 output:
   tufte::tufte_html: default
@@ -78,7 +78,7 @@ From the post-film survey data, the key findings drawn from those who have atten
 ```{r Intro - side-image, echo = FALSE, fig.margin = TRUE}
 knitr::include_graphics('pictures/director.jpg')
 ```
-> _LEAFF aims to champion the growing collaboration in East Asian filmmaking with a philosophy that marks a shift in the cinematic landscape of East Asia, and moves away from cultural and cinematic borders. Our vision is to bring a much wider, eclectic, and diverse programme of films from over 10 countries to show the richness and diversity of the region and its people. We want to draw people in with the familiar, and offer opportunities to see something new._
+> _The London East Asia Film Festival (LEAFF) is the largest film festival of its kind in London, introducing the diversity of East Asian culture though film. Our world needs, more than ever before, a medium to bridge cultural understanding. There is no better way than through film. LEAFF represents a culmination of the most inspiring, engaging and inclusive cross-cultural programming. LEAFF brings the best of East Asian cinema every year to the capital and aims to champion the growing collaboration in East Asian filmmaking._
 >
 > `r quote_footer('--- Hyejung Jeon, Festival Director')`
 
