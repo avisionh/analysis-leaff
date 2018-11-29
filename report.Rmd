@@ -1,7 +1,7 @@
 ---
 title: "Analysis: How successful was LEAFF 2018?"
 subtitle: "[London East Asia Film Festival (LEAFF) 2018](https://www.leaff.org.uk/)"
-author: "[Avision Ho](https://github.com/avisionh) and Chelsea Do Hyung Kim" 
+author: "[Avision Ho](https://github.com/avisionh)" 
 date: "`r Sys.Date()`"
 output:
   tufte::tufte_html: default
@@ -60,17 +60,17 @@ source("scripts/2018/2.5 - reportRetention.R")
 ```{r Exec Summary - side-image, echo = FALSE, fig.margin = TRUE}
 knitr::include_graphics('pictures/logo.jpg')
 ```
-From the data analysed in this report, the key findings are:
+From the post-film survey data, the key findings drawn from those who have attended the festival and filled out a survey are:
 
-**Survey respondents enjoyed LEAFF 2018 so much that `r toString(paste0(txt_rating * 100, "%"))` of them will return for future editions of LEAFF.**
+**`r toString(paste0(txt_rating * 100, "%"))` enjoyed LEAFF 2018 so much that will return for future editions of LEAFF.**
 
-**Survey respondents enjoyed LEAFF 2018 so much that `r toString(paste0(txt_recommend * 100, "%"))` of them will recommend a friend or colleague to attend LEAFF.**
+**`r toString(paste0(txt_recommend * 100, "%"))` enjoyed LEAFF 2018 so much that they would recommend a friend or colleague to attend LEAFF.**
 
-**Most survey respondents answered that they have watched or expect to watch `r toString(txt_no_film)` films during LEAFF 2018 as they `r toString(txt_no_film_conc[2])`.**
+**Most said that they have watched or expect to watch `r toString(txt_no_film)` films during LEAFF 2018 as they `r toString(txt_no_film_conc[2])`.**
 
-**The top three reasons for why survey respondents wanted to attend LEAFF were *`r toString(txt_motivation)`*.**
+***`r toString(txt_motivation)`* were the top three reasons why they wanted to attend LEAFF 2018.**
 
-**`r toString(paste0(txt_retention_new * 100, "%"))` of survey respondents said this is their first time coming to the festival, showing that LEAFF was `r toString(txt_retention_stay[2])` in attracting new audience memebers and retaining previous members.**
+**`r toString(paste0(txt_retention_new * 100, "%"))` said this is their first time coming to the festival, showing that LEAFF was `r toString(txt_retention_stay[2])` in attracting new audience members and retaining previous members.**
 
 ***
 
