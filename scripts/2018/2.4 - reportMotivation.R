@@ -1,8 +1,8 @@
 data_motivation <- data_survey %>% 
-  filter(str_detect(string = Question, pattern = "3. What is the main motivation")) %>% 
+  filter(str_detect(string = Question, pattern = "main motivation")) %>% 
   mutate(Response = as.integer(Response)) %>% 
-  select(Choice, Response) %>% 
-  group_by(Choice) %>% 
+  select(Selection, Response) %>% 
+  group_by(Selection) %>% 
   summarise(Total = sum(Response, na.rm = TRUE)) %>% 
   mutate(Percent = round(x = Total/sum(Total), digits = 2))
 
@@ -10,7 +10,7 @@ data_motivation <- data_survey %>%
 txt_motivation <- data_motivation %>% 
   arrange(desc(Total)) %>% 
   head(3) %>% 
-  mutate(String = paste0(Choice, sep = " (", paste0(Percent*100, "%"), sep = ")")) %>% 
+  mutate(String = paste0(Selection, sep = " (", paste0(Percent*100, "%"), sep = ")")) %>% 
   select(String) %>% 
   pull()
 txt_motivation <- paste0(txt_motivation[1], ", ", txt_motivation[2], " and ", txt_motivation[3])
