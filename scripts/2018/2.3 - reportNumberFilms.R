@@ -1,19 +1,19 @@
-data_no_film <- data_survey %>% 
-  filter(str_detect(string = Question, pattern = "15. How many movies")) %>% 
+data_ethnicity <- data_survey %>% 
+  filter(str_detect(string = Question, pattern = "ethnicity")) %>% 
   mutate(Response = as.integer(Response)) 
 
-txt_no_film <- data_no_film %>% 
-  select(Choice, Response) %>% 
-  group_by(Choice) %>% 
+txt_ethnicity <- data_ethnicity %>% 
+  select(Selection, Response) %>% 
+  group_by(Selection) %>% 
   summarise(Total = sum(x = Response, na.rm = TRUE)) %>% 
   arrange(desc(Total)) %>% 
   head(1) %>% 
-  select(Choice) %>% 
+  select(Selection) %>% 
   pull()
 
 # Logic to check if high rating of festival is linked to number of screenings
-if (txt_rating > 0.65 & (txt_no_film == "14+" | txt_no_film == "8-13")) {
-  txt_no_film_conc <- c("supports", "enjoyed their experience so much they wanted to watch more screenings")
+if (txt_ethnicity != "White - British" | txt_ethnicity != "White - European") {
+  txt_ethnicity_conc <- c("promoting")
 } else {
-  txt_no_film_conc <- c("conflicts with", "may have other reasons for not attending more screenings, such as work or studies")
+  txt_ethnicity_conc <- c("following wider UK trends on")
 }
