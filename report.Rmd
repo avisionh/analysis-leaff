@@ -66,7 +66,7 @@ From the post-film survey data, the key findings drawn from those who have atten
 
 **`r toString(paste0(txt_recommend * 100, "%"))` enjoyed LEAFF 2018 so much that they would recommend a friend or colleague to attend LEAFF.**
 
-**Most said that they have watched or expect to watch `r toString(txt_no_film)` films during LEAFF 2018 as they `r toString(txt_no_film_conc[2])`.**
+**Most of the audience were from an `r toString(txt_ethnicity)` ethnic background. This shows LEAFF is `r toString(txt_ethnicity_conc)` the attendance of ethnic minority groups.**
 
 ***`r toString(txt_motivation)`* were the top three reasons why they wanted to attend LEAFF 2018.**
 
@@ -121,13 +121,13 @@ lvls <- c("Very likely", "Likely", "Don't know", "Unlikely")
 data_rating <- data_rating %>% 
   filter(Response == 1) %>% 
   # select only columns we need
-  select(Choice, Response) %>% 
+  select(Selection, Response) %>% 
   # force factor order
-  mutate(Choice = factor(x = Choice, levels = lvls))
+  mutate(Selection = factor(x = Selection, levels = lvls))
 
 # Plot the rating
 func_plot_counts_percents(x = data_rating, 
-                          col_x = "Choice",
+                          col_x = "Selection",
                           colour_fill = cb_palette[["cb_green"]], 
                           plot_title = "Rating of Experience", 
                           plot_title_x = "How likely are you to attend LEAFF again?")
@@ -146,25 +146,26 @@ pander(x = table_future,
        caption = "_Likelihood of audience recommending LEAFF to friends or colleagues_")
 ```
 
-## Section 2.3: How many do screenings does our audience see?
+## Section 2.3: Is LEAFF appealing to minority ethnic groups in London?
 ```{r (SHOW) 2.3 No. ofscreenings - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 2", fig.width = 5, fig.height = 4}
 
 # Create levels so we capture all responses and in right order
-lvls <- c("1-3", "4-7", "8-13", "14+")
+lvls <- c("White - British", "White - European", "Black - African / British", "Black - Caribbean / British",
+          "South Asian", "East Asian / South East Asian", "Arab", "Other (please state)", "Prefer not to say")
 
-data_no_film <- data_no_film %>% 
-  mutate(Choice = factor(x = Choice, levels = lvls)) %>% 
+data_ethnicity <- data_ethnicity %>% 
+  mutate(Selection = factor(x = Selection, levels = lvls)) %>% 
   filter(Response == 1)
-func_plot_counts_percents(x = data_no_film,
-                         col_x = "Choice",
+func_plot_counts_percents(x = data_ethnicity,
+                         col_x = "Selection",
                          colour_fill = cb_palette["cb_dark_blue"],
-                         plot_title = "Number of Screenings",
-                         plot_title_x = "Number of screenings will attend/have attended")
+                         plot_title = "Audience Ethnicity",
+                         plot_title_x = "Ethnic Group")
 
 ```
-+ In **Figure 2**, can see that the largest range of films survey respondents have seen or plan to see is `r toString(txt_no_film)`.
++ In **Figure 2**, can see that the majority of the audience who attended LEAFF and completed the survey are of the `r toString(txt_ethnicity)` ethnic group.
 
-+ This `r toString(txt_no_film_conc[1])` the earlier findings that `r toString(paste0(txt_rating * 100, "%"))` of respondents were **Very likely** or **Likely** to return to future LEAFFs, which suggests they `r toString(txt_no_film_conc)`.
++ This shows LEAFF is `r toString(txt_ethnicity_conc)` the attendance of ethnic minority groups..
 
 ## Section 2.4: Why does our audience come to LEAFF?
 + Digging further into why `r toString(paste0(txt_rating * 100, "%"))` of survey respondents enjoyed their LEAFF experience such that they are **Very likely** or **Likely** to attend, we see the top three reasons for why they wanted to attend LEAFF were *`r toString(txt_motivation)`*.
@@ -175,7 +176,7 @@ func_plot_counts_percents(x = data_no_film,
 ```{r (SHOW) 2.5 Retention - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 3", fig.width = 6, fig.height = 5}
 lvls <- c("This is my first!", "Yes")
 
-func_plot_pie(x = table_retention, col_counts = "Percent", col_category = "Choice_New", 
+func_plot_pie(x = table_retention, col_counts = "Percent", col_category = "Selection_New", 
               plot_title = "Audience Retention", factor_levels = lvls)
 ```
 + In **Figure 3**, we have `r toString(paste0(txt_retention_new * 100, "%"))` of respondents saying this is their first time coming to the festival. 
@@ -199,7 +200,7 @@ knitr::include_graphics('pictures/team.jpg')
 
 **Survey respondents enjoyed LEAFF 2018 so much that `r toString(paste0(txt_recommend * 100, "%"))` of them will recommend a friend or colleague to attend LEAFF.**
 
-**Most survey respondents answered that they have watched or expect to watch `r toString(txt_no_film)` films during LEAFF 2018 as they `r toString(txt_no_film_conc)`.**
+**The majority of survey respondents are of the `r toString(txt_ethnicity)` ethnic group.**
 
 **The top three reasons for why survey respondents wanted to attend LEAFF were *`r toString(txt_motivation)`*.**
 
