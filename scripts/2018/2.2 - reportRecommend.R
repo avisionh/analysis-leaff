@@ -3,10 +3,10 @@ lvls <- c("Very likely", "Likely", "Unlikely")
 
 # Construct table for presentation
 table_recommend <- data_survey %>% 
-  filter(str_detect(string = Question, pattern = "23. How likely is")) %>% 
-  mutate(Choice = factor(x = Choice, levels = lvls), Response = as.integer(Response)) %>% 
-  select(Choice, Response) %>% 
-  group_by(Choice) %>% 
+  filter(str_detect(string = Question, pattern = "recommend the LEAFF to a friend or a colleague")) %>% 
+  mutate(Selection = factor(x = Selection, levels = lvls), Response = as.integer(Response)) %>% 
+  select(Selection, Response) %>% 
+  group_by(Selection) %>% 
   summarise(Total = sum(Response, na.rm = TRUE)) %>% 
   mutate(Percent = round(x = Total/sum(Total), digits = 2)) 
 
@@ -15,7 +15,7 @@ table_future <- table_recommend %>%
 
 # Generate text
 txt_recommend <- table_recommend %>% 
-  filter(Choice %in% c("Very likely", "Likely")) %>% 
+  filter(Selection %in% c("Very likely", "Likely")) %>% 
   mutate(PercentFinal = sum(x = Percent)) %>% 
   distinct(PercentFinal) %>% 
   pull()
