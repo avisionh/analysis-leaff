@@ -20,8 +20,10 @@
 vec_packages <- c("readr", "magrittr", "tibble", "tidyr" , "dplyr")
 pacman::p_load(char = vec_packages, install = TRUE)
 
+year_latest <- 2019
+
 # Data Import -------------------------------------------------------------
-data_survey <- read_csv(file = "data/SurveyResponses2018.csv")
+data_survey <- read_csv(file = "data/data_survey.csv")
 
 # Data Clean --------------------------------------------------------------
 data_survey <- data_survey %>% 
@@ -30,22 +32,17 @@ data_survey <- data_survey %>%
   fill(x = c("UserID", "Film", "Question")) %>% 
   # convert funny dates into ranges to replicate what's shown in the survey.
   # Seems to be something funny when converting Excel to csv since '1-3' turns to '01-Mar'
-  mutate(Choice = case_when(
-    Choice == "01-Mar"    ~ "1-3",
-    Choice == "04-Jul"    ~ "4-7",
-    Choice == "Aug-13"    ~ "8-13",
-    TRUE                  ~ Choice
+  mutate(Selection = case_when(
+    Selection == "01-Mar"    ~ "1-3",
+    Selection == "04-Jul"    ~ "4-7",
+    Selection == "Aug-13"    ~ "8-13",
+    TRUE                  ~ Selection
   )) %>% 
   # replace NA with 0 to mean they did not answer these sections
   mutate(Response = ifelse(is.na(Response), 0, Response),
          Film = as.factor(x = Film),
          Question = as.factor(x = Question),
-         Choice = as.factor(x = Choice))
+         Selection = as.factor(x = Selection))
 
-# Interpretation-specific cleaning
-# DESC: Cleaning dataframe where we had to make some interpretations 
-#       when translating the 2017 version of the survey responses to 2018
-data_survey <- data_survey %>% 
-  mutate(Choice = str_replace_all(string = Choice, 
-                              pattern = "The director\\(s\\)", 
-                              replacement = "The director(s) and/or actor(s)"))
+# filter for latest year
+data_survey <- filter(.data = data_survey, YearOfFestival == year_latest)
