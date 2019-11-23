@@ -17,7 +17,7 @@
 # ------------------------------------------
 
 # Data import and wrangling
-vec_packages <- c("readr", "magrittr", "tibble", "tidyr" , "dplyr")
+vec_packages <- c("readr", "magrittr", "tibble", "tidyr" , "dplyr", "stringr")
 pacman::p_load(char = vec_packages, install = TRUE)
 
 year_latest <- 2019
@@ -27,7 +27,7 @@ data_survey <- read_csv(file = "data/data_survey.csv")
 
 # Data Clean --------------------------------------------------------------
 data_survey <- data_survey %>% 
-  as.tibble() %>% 
+  as_tibble() %>% 
   # pad out tibble with previous row's entries
   fill(x = c("UserID", "Film", "Question")) %>% 
   # convert funny dates into ranges to replicate what's shown in the survey.
