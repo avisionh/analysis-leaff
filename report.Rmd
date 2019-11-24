@@ -1,6 +1,6 @@
 ---
-title: "Analysis: How successful was LEAFF 2018?"
-subtitle: "[London East Asia Film Festival (LEAFF) 2018](https://www.leaff.org.uk/)"
+title: "Analysis: How successful was LEAFF 2019?"
+subtitle: "[London East Asia Film Festival (LEAFF)](https://www.leaff.org.uk/)"
 author: "[Avision Ho](https://github.com/avisionh), Strategy" 
 date: "`r Sys.Date()`"
 output:
@@ -30,8 +30,8 @@ options(htmltools.dir.version = FALSE)
 knitr::opts_chunk$set(results = "asis", warning = FALSE, message = FALSE)
 
 # Load scripts
-source("scripts/2018/0 - functions.R")
-source("scripts/2018/1.1 - dataImportClean.R")
+source("scripts/0 - functions.R")
+source("scripts/1.1 - dataImportClean.R")
 
 # Turn off scientific notation
 options(scipen = 999, expressions = 10000)
@@ -51,24 +51,24 @@ rm(vec_packages)
 
 # Executive Summary
 ```{r (HIDE) Exec Summary (also in 1.1 Rating - text), echo = FALSE, include = FALSE}
-source("scripts/2018/2.1 - reportRating.R")
-source("scripts/2018/2.2 - reportRecommend.R")
-source("scripts/2018/2.3 - reportNumberFilms.R")
-source("scripts/2018/2.4 - reportMotivation.R")
-source("scripts/2018/2.5 - reportRetention.R")
+source("scripts/2.1 - reportRating.R")
+source("scripts/2.2 - reportRecommend.R")
+source("scripts/2.3 - reportEthnicity.R")
+source("scripts/2.4 - reportMotivation.R")
+source("scripts/2.5 - reportRetention.R")
 ```
 ```{r Exec Summary - side-image, echo = FALSE, fig.margin = TRUE}
-knitr::include_graphics('pictures/logo.jpg')
+knitr::include_graphics('pictures/poster.jpg')
 ```
 From the post-film survey data, the key findings drawn from those who have attended the festival and filled out a survey are:
 
-**`r toString(paste0(txt_rating * 100, "%"))` enjoyed LEAFF 2018 so much that will return for future editions of LEAFF.**
+**`r toString(paste0(txt_rating * 100, "%"))` rated their LEAFF experience to be "Very good" or "Good".**
 
-**`r toString(paste0(txt_recommend * 100, "%"))` enjoyed LEAFF 2018 so much that they would recommend a friend or colleague to attend LEAFF.**
+**`r toString(paste0(txt_recommend * 100, "%"))` enjoyed LEAFF so much that they would recommend a friend or colleague to attend LEAFF.**
 
-**Most said that they have watched or expect to watch `r toString(txt_no_film)` films during LEAFF 2018 as they `r toString(txt_no_film_conc[2])`.**
+**Most of the audience were from an `r toString(txt_ethnicity)` ethnic background. This shows LEAFF is `r toString(txt_ethnicity_conc)` the attendance of ethnic minority groups.**
 
-***`r toString(txt_motivation)`* were the top three reasons why they wanted to attend LEAFF 2018.**
+***`r toString(txt_motivation)`* were the top three reasons why they wanted to attend LEAFF.**
 
 **`r toString(paste0(txt_retention_new * 100, "%"))` said this is their first time coming to the festival, showing that LEAFF was `r toString(txt_retention_stay[2])` in attracting new audience members and retaining previous members.**
 
@@ -82,100 +82,107 @@ knitr::include_graphics('pictures/director.jpg')
 >
 > `r quote_footer('--- Hyejung Jeon, Festival Director')`
 
-`r newthought('This paper analyses the data')` collected from the London East Asia Film Festival (LEAFF) 2018. It does so with the intention of providing a summary of how successful the event was, and to provide a benchmark for future editions 
+`r newthought('This paper analyses the data')` collected from the London East Asia Film Festival (LEAFF) 2019. It does so with the intention of providing a summary of how successful the event was, and to provide a benchmark for future editions 
 
 ***
 # Section 1: Quotes from the Audience
-```{r Quotes - side-image, echo = FALSE, fig.margin = TRUE}
-knitr::include_graphics('pictures/audience.jpg')
+```{r Quotes - side-image-one, echo = FALSE, fig.margin = TRUE}
+knitr::include_graphics('pictures/opening_gala.jpg')
 ```
-`r newthought("This section presents")` some of the comments made by audience members who have attended LEAFF 2018.
 
-> _"Very positive, fascinating and varied films; informative discussion, nice atmosphere."_
+```{r Quotes - side-image-two, echo = FALSE, fig.margin = TRUE}
+knitr::include_graphics('pictures/closing_gala.jpg')
+```
+`r newthought("This section presents")` some of the comments made by audience members who have attended LEAFF 2019.
 
-> _"Pleasant and welcoming - good for going as a solo customer."_
+> _"Lots of fun, both film & extra activities."_
 
-> _"A great chance to see films you otherwise would not."_
+> _"Interesting, engaging and enjoyable."_
 
-> _"A meaningful and memorable experience."_
+> _"Great experience with great films."_
 
-> _"Eye-opening; new but at home."_
+> _"AMAZING! So much fun!!"_
 
-> _"Intensive and inspiring"_
+> _"Very enjoyable & comfy!"_
 
-> _"Mind-opening"_
+> _"Best day in my life"_
 
-> `r quote_footer('--- LEAFF 2018 audience members')`
+> _"Phenomenal"_
+
+> _"Inspiring"_
+
+> `r quote_footer('--- LEAFF 2019 audience members')`
 
 ***
 
 # Section 2: Key Performance Metrics
 `r newthought("This section presents")` key analyis of the festival's performance data.
 
-## Section 2.1: How much did the audience enjoy LEAFF 2018?
+## Section 2.1: How much did the audience enjoy LEAFF?
 ```{r (SHOW) 2.1 Rating - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 1", fig.width = 5, fig.height = 4}
 
 # Create levels so we capture all responses and in right order
-lvls <- c("Very likely", "Likely", "Don't know", "Unlikely")
+lvls <- c("Very good", "Good", "Average", "Poor", "Very poor")
 
 data_rating <- data_rating %>% 
   filter(Response == 1) %>% 
   # select only columns we need
-  select(Choice, Response) %>% 
+  select(Selection, Response) %>% 
   # force factor order
-  mutate(Choice = factor(x = Choice, levels = lvls))
+  mutate(Selection = factor(x = Selection, levels = lvls))
 
 # Plot the rating
 func_plot_counts_percents(x = data_rating, 
-                          col_x = "Choice",
+                          col_x = "Selection",
                           colour_fill = cb_palette[["cb_green"]], 
                           plot_title = "Rating of Experience", 
-                          plot_title_x = "How likely are you to attend LEAFF again?")
+                          plot_title_x = "How would you rate your experience of LEAFF 2019?")
 ```
-+ In **Figure 1**, `r toString(paste0(txt_rating * 100, "%"))` of attendees rated their LEAFF 2018 experience as being so good that they are either **Very likely** or **Likely** to attend the festival again in the future.
++ In **Figure 1**, `r toString(paste0(txt_rating * 100, "%"))` of attendees rated their LEAFF experience as being **Very good** or **Good**.
 
-+ This demonstrates that `r toString(txt_rating_conc[1])` attendees enjoyed LEAFF 2018 and that the programme and activities which were part of this were `r toString(txt_rating_conc[2])` in capturing the public's interests and appetite for film and cinema.
++ This demonstrates that `r toString(txt_rating_conc[1])` attendees enjoyed LEAFF and that the programme and activities which were part of this were `r toString(txt_rating_conc[2])` in capturing the public's interests and appetite for film and cinema.
 
 ## Section 2.2: How likely are the audience to recommend LEAFF to friends and colleagues?
 + In the table below, `r toString(paste0(txt_recommend * 100, "%"))` of respondents said they were either **Very likely** or **Likely** to recommend a friend or colleague to attend LEAFF.
 
-+ This `r toString(txt_recommend_conc)` the findings made in *Section 1.1* where `r toString(paste0(txt_rating * 100, "%"))` of respondents said they were **Very likely** or **Likely** to attend future LEAFFs. 
++ This `r toString(txt_recommend_conc)` the findings made in *Section 2.1* where `r toString(paste0(txt_rating * 100, "%"))` of respondents said their experience of LEAFF was **Very good** or **Good**. 
 
 ```{r (SHOW) 2.2 Recommend - table, echo = FALSE, fig.margin = TRUE}
 pander(x = table_future, 
        caption = "_Likelihood of audience recommending LEAFF to friends or colleagues_")
 ```
 
-## Section 2.3: How many do screenings does our audience see?
+## Section 2.3: Is LEAFF appealing to minority ethnic groups in London?
 ```{r (SHOW) 2.3 No. ofscreenings - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 2", fig.width = 5, fig.height = 4}
 
 # Create levels so we capture all responses and in right order
-lvls <- c("1-3", "4-7", "8-13", "14+")
+lvls <- c("White - British", "White - European", "Black - African / British", "Black - Caribbean / British",
+          "South Asian", "East Asian / South East Asian", "Arab", "Other (please state)", "Prefer not to say")
 
-data_no_film <- data_no_film %>% 
-  mutate(Choice = factor(x = Choice, levels = lvls)) %>% 
+data_ethnicity <- data_ethnicity %>% 
+  mutate(Selection = factor(x = Selection, levels = lvls)) %>% 
   filter(Response == 1)
-func_plot_counts_percents(x = data_no_film,
-                         col_x = "Choice",
+func_plot_counts_percents(x = data_ethnicity,
+                         col_x = "Selection",
                          colour_fill = cb_palette["cb_dark_blue"],
-                         plot_title = "Number of Screenings",
-                         plot_title_x = "Number of screenings will attend/have attended")
+                         plot_title = "Audience Ethnicity",
+                         plot_title_x = "What is your ethnicity?")
 
 ```
-+ In **Figure 2**, can see that the largest range of films survey respondents have seen or plan to see is `r toString(txt_no_film)`.
++ In **Figure 2**, the majority of the audience who attended LEAFF and completed the survey are of the **`r toString(txt_ethnicity)`** ethnic group.
 
-+ This `r toString(txt_no_film_conc[1])` the earlier findings that `r toString(paste0(txt_rating * 100, "%"))` of respondents were **Very likely** or **Likely** to return to future LEAFFs, which suggests they `r toString(txt_no_film_conc)`.
++ This shows LEAFF is `r toString(txt_ethnicity_conc)` the attendance of ethnic minority groups to watch film.
 
 ## Section 2.4: Why does our audience come to LEAFF?
-+ Digging further into why `r toString(paste0(txt_rating * 100, "%"))` of survey respondents enjoyed their LEAFF experience such that they are **Very likely** or **Likely** to attend, we see the top three reasons for why they wanted to attend LEAFF were *`r toString(txt_motivation)`*.
++ Digging further into why `r toString(paste0(txt_rating * 100, "%"))` of survey respondents enjoyed their LEAFF experience to rate it as **Very good** or **Good**, we see the top three reasons for why they wanted to attend LEAFF were *`r toString(txt_motivation)`*.
 
 + This demonstrates that LEAFF is more than just a festival that screens films, but it also caters for film fans' other interests.
 
-## Section 2.5: How many previous and new audiences came to LEAFF 2018?
+## Section 2.5: How many previous and new audiences came to LEAFF?
 ```{r (SHOW) 2.5 Retention - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 3", fig.width = 6, fig.height = 5}
 lvls <- c("This is my first!", "Yes")
 
-func_plot_pie(x = table_retention, col_counts = "Percent", col_category = "Choice_New", 
+func_plot_pie(x = table_retention, col_counts = "Percent", col_category = "Selection_New", 
               plot_title = "Audience Retention", factor_levels = lvls)
 ```
 + In **Figure 3**, we have `r toString(paste0(txt_retention_new * 100, "%"))` of respondents saying this is their first time coming to the festival. 
@@ -184,6 +191,7 @@ func_plot_pie(x = table_retention, col_counts = "Percent", col_category = "Choic
     - `r toString(txt_retention[1])`
     - `r toString(txt_retention[2])`
     - `r toString(txt_retention[3])`
+    - `r toString(txt_retention[4])`
 
 + As a `r toString(txt_retention_stay[1])` proportion of attendees have returned to LEAFF from previous years, then this demonstrates that previous LEAFFs were `r toString(txt_retention_stay[2])` in encouraging people to return for this year's festival.
 
@@ -191,21 +199,21 @@ func_plot_pie(x = table_retention, col_counts = "Percent", col_category = "Choic
 
 # Concluding Remarks
 ```{r Conclusion - side-image, echo = FALSE, fig.margin = TRUE}
-knitr::include_graphics('pictures/team.jpg')
+knitr::include_graphics('pictures/volunteers.jpg')
 ```
 + From the data analysed in this report, the key findings are:
 
-**Survey respondents enjoyed LEAFF 2018 so much that `r toString(paste0(txt_rating * 100, "%"))` of them will return for future editions of LEAFF.**
+**Survey respondents enjoyed LEAFF so much that `r toString(paste0(txt_rating * 100, "%"))` said their experience was *Very good* or *Good*.**
 
-**Survey respondents enjoyed LEAFF 2018 so much that `r toString(paste0(txt_recommend * 100, "%"))` of them will recommend a friend or colleague to attend LEAFF.**
+**Survey respondents enjoyed LEAFF so much that `r toString(paste0(txt_recommend * 100, "%"))` of them will recommend a friend or colleague to attend LEAFF.**
 
-**Most survey respondents answered that they have watched or expect to watch `r toString(txt_no_film)` films during LEAFF 2018 as they `r toString(txt_no_film_conc)`.**
+**The majority of survey respondents are of the *`r toString(txt_ethnicity)`* ethnic group.**
 
 **The top three reasons for why survey respondents wanted to attend LEAFF were *`r toString(txt_motivation)`*.**
 
-**`r toString(paste0(txt_retention_new * 100, "%"))` of survey respondents said this is their first time coming to the festival, showing that LEAFF was `r toString(txt_retention_stay[2])` in attracting new audience memebers and retaining previous members.**
+**`r toString(paste0(txt_retention_new * 100, "%"))` of survey respondents said this is their first time coming to the festival, showing that LEAFF was `r toString(txt_retention_stay[2])` in attracting new audience members and retaining previous members.**
 
-```{r bib, include=FALSE}
+```{r bib, include = FALSE}
 # create a bib file for the R packages used in this document
 knitr::write_bib(c('base', 'rmarkdown'), file = 'skeleton.bib')
 ```
