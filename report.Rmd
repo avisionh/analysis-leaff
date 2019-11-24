@@ -58,7 +58,7 @@ source("scripts/2018/2.4 - reportMotivation.R")
 source("scripts/2018/2.5 - reportRetention.R")
 ```
 ```{r Exec Summary - side-image, echo = FALSE, fig.margin = TRUE}
-knitr::include_graphics('pictures/logo.jpg')
+knitr::include_graphics('pictures/poster.jpg')
 ```
 From the post-film survey data, the key findings drawn from those who have attended the festival and filled out a survey are:
 
@@ -86,8 +86,12 @@ knitr::include_graphics('pictures/director.jpg')
 
 ***
 # Section 1: Quotes from the Audience
-```{r Quotes - side-image, echo = FALSE, fig.margin = TRUE}
-knitr::include_graphics('pictures/audience.jpg')
+```{r Quotes - side-image-one, echo = FALSE, fig.margin = TRUE}
+knitr::include_graphics('pictures/opening_gala.jpg')
+```
+
+```{r Quotes - side-image-two, echo = FALSE, fig.margin = TRUE}
+knitr::include_graphics('pictures/closing_gala.jpg')
 ```
 `r newthought("This section presents")` some of the comments made by audience members who have attended LEAFF 2019.
 
@@ -195,7 +199,7 @@ func_plot_pie(x = table_retention, col_counts = "Percent", col_category = "Selec
 
 # Concluding Remarks
 ```{r Conclusion - side-image, echo = FALSE, fig.margin = TRUE}
-knitr::include_graphics('pictures/team.jpg')
+knitr::include_graphics('pictures/volunteers.jpg')
 ```
 + From the data analysed in this report, the key findings are:
 
