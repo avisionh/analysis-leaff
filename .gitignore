@@ -5,5 +5,3 @@
 .Rprofile
 packrat/
 packrat/lib*/
-report.html
-report_files/
