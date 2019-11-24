@@ -91,19 +91,21 @@ knitr::include_graphics('pictures/audience.jpg')
 ```
 `r newthought("This section presents")` some of the comments made by audience members who have attended LEAFF 2019.
 
-> _"Very positive, fascinating and varied films; informative discussion, nice atmosphere."_
+> _"Lots of fun, both film & extra activities."_
 
-> _"Pleasant and welcoming - good for going as a solo customer."_
+> _"Interesting, engaging and enjoyable."_
 
-> _"A great chance to see films you otherwise would not."_
+> _"Great experience with great films."_
 
-> _"A meaningful and memorable experience."_
+> _"AMAZING! So much fun!!"_
 
-> _"Eye-opening; new but at home."_
+> _"Very enjoyable & comfy!"_
 
-> _"Intensive and inspiring"_
+> _"Best day in my life"_
 
-> _"Mind-opening"_
+> _"Phenomenal"_
+
+> _"Inspiring"_
 
 > `r quote_footer('--- LEAFF 2019 audience members')`
 
@@ -130,7 +132,7 @@ func_plot_counts_percents(x = data_rating,
                           col_x = "Selection",
                           colour_fill = cb_palette[["cb_green"]], 
                           plot_title = "Rating of Experience", 
-                          plot_title_x = "How would you reate your experience of LEAFF 2019?")
+                          plot_title_x = "How would you rate your experience of LEAFF 2019?")
 ```
 + In **Figure 1**, `r toString(paste0(txt_rating * 100, "%"))` of attendees rated their LEAFF experience as being **Very good** or **Good**.
 
@@ -160,7 +162,7 @@ func_plot_counts_percents(x = data_ethnicity,
                          col_x = "Selection",
                          colour_fill = cb_palette["cb_dark_blue"],
                          plot_title = "Audience Ethnicity",
-                         plot_title_x = "What is your ethnicity")
+                         plot_title_x = "What is your ethnicity?")
 
 ```
 + In **Figure 2**, the majority of the audience who attended LEAFF and completed the survey are of the **`r toString(txt_ethnicity)`** ethnic group.
