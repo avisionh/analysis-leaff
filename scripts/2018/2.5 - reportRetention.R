@@ -1,5 +1,5 @@
 data_retention <- data_survey %>% 
-  filter(str_detect(string = Question, pattern = "1. Did you attend")) %>% 
+  filter(str_detect(string = Question, pattern = "previous LEAFF")) %>% 
   mutate(Response = as.integer(Response),
          Selection_New = ifelse(str_detect(string = Selection, pattern = "Yes"), "Yes", Selection))
 
