@@ -30,7 +30,7 @@ func_plot_counts_percents <- function(x, col_x, plot_stat = "count", colour_fill
                                            scales::percent((..count..)/sum(..count..)))), 
               stat = plot_stat, 
               colour = "black") +
-    labs(title = paste0("Bar Chart: ", plot_title), subtitle = "LEAFF 2018", x = plot_title_x, y = "Count") +
+    labs(title = paste0("Bar Chart: ", plot_title), subtitle = "LEAFF 2019", x = plot_title_x, y = "Count") +
     theme(plot.title = element_text(face = "bold", hjust = 0.5),
           plot.subtitle = element_text(face = "bold", hjust = 0.5),
           panel.background = element_blank(),
@@ -64,7 +64,7 @@ func_plot_pie <- function(x, col_counts, col_category, plot_title, factor_levels
     #geom_text(mapping = aes(y = get(col_label), label = get(col_label, position = theta("y")))) +
     geom_text(size = 3, position = position_stack(vjust = 0.5)) +
     labs(title = paste0("Pie Chart: ", plot_title),
-         subtitle = "LEAF 2018",
+         subtitle = "LEAF 2019",
          fill = "Key") +
     theme(plot.title = element_text(face = "bold", hjust = 0.5),
           plot.subtitle = element_text(face = "bold", hjust = 0.5),
