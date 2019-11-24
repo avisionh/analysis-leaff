@@ -17,41 +17,41 @@
 # ------------------------------------------
 
 # Data import and wrangling
-vec_packages <- c("readxl", "janitor", "magrittr", "dplyr", "stringr", "tidyr")
+vec_packages <- c("readr", "magrittr", "tibble", "tidyr" , "dplyr", "stringr")
 pacman::p_load(char = vec_packages, install = TRUE)
 
-# Data Import -------------------------------------------------------------
-data_activity_fund <- read_xlsx(path = "data/AudienceFundKPI2017.xlsx", sheet = "Activity List", skip = 3)
-data_demographics <- read_xlsx(path = "data/AudienceFundKPI2017.xlsx", sheet = "Data & Demographics")
+year_latest <- 2019
 
+# Data Import -------------------------------------------------------------
+data_survey <- read_csv(file = "data/data_survey.csv")
 
 # Data Clean --------------------------------------------------------------
-# General Excel file cleaning
-data_activity_fund <- data_activity_fund %>% 
-  clean_names() %>% 
-  remove_empty(which = c("rows", "cols"))
-data_demographics <- data_demographics %>% 
-  remove_empty(which = c("rows", "cols"))
+data_survey <- data_survey %>% 
+  as_tibble() %>% 
+  # pad out tibble with previous row's entries
+  fill(x = c("UserID", "Film", "Question")) %>% 
+  # convert funny dates into ranges to replicate what's shown in the survey.
+  # Seems to be something funny when converting Excel to csv since '1-3' turns to '01-Mar'
+  mutate(Selection = case_when(
+    Selection == "01-Mar"    ~ "1-3",
+    Selection == "04-Jul"    ~ "4-7",
+    Selection == "Aug-13"    ~ "8-13",
+    TRUE                  ~ Selection
+  )) %>% 
+  # replace NA with 0 to mean they did not answer these sections
+  mutate(Response = ifelse(is.na(Response), 0, Response),
+         Film = as.factor(x = Film),
+         Question = as.factor(x = Question),
+         Selection = as.factor(x = Selection))
 
-# Data-specific cleaning
-data_activity_fund <- data_activity_fund %>% 
-  rename(VenueName = venue_name_s,
-         VenuePostCode = venue_postcode_1st_half,
-         FilmTitle = starts_with(match = "feature_film"),
-         YearOfRelease = year_of_release,
-         NumberOfScreenings = no_times_screened,
-         TotalAdmissions = total_admissions)
 
-# remove unecessary rows
-data_demographics <- data_demographics[-c(1, 12, 13), ]
-data_demographics <- data_demographics %>% 
-  # pad out tibble with previous row's entry
-  fill(x = X__1, .direction = "down") %>% 
-  rename(Category = X__1,
-         Field = starts_with(match = "DATA"),
-         Value = X__2) %>% 
-  select(Category, Field, Value) %>% 
-  mutate(Category = ifelse(is.na(Category), "General", Category),
-         Field = str_replace(string = Field, pattern = "Age ", replacement = "")) %>% 
-  # remove "Total Responses"
-  filter(Field != "Total Responses" & Field != "Total responses" & !is.na(Value))
+# Interpretation-specific cleaning
+# DESC: Cleaning dataframe where we had to make some interpretations 
+#       when translating the 2017 version of the survey responses to 2018
+data_survey <- data_survey %>% 
+  mutate(Selection = str_replace_all(string = Selection, 
+                                  pattern = "The director\\(s\\)", 
+                                  replacement = "The director(s) and/or actor(s)"))
+
+# filter for latest year
+data_survey <- filter(.data = data_survey, YearOfFestival == year_latest)

@@ -30,8 +30,8 @@ options(htmltools.dir.version = FALSE)
 knitr::opts_chunk$set(results = "asis", warning = FALSE, message = FALSE)
 
 # Load scripts
-source("scripts/2018/0 - functions.R")
-source("scripts/2018/1.1 - dataImportClean.R")
+source("scripts/0 - functions.R")
+source("scripts/1.1 - dataImportClean.R")
 
 # Turn off scientific notation
 options(scipen = 999, expressions = 10000)
@@ -51,11 +51,11 @@ rm(vec_packages)
 
 # Executive Summary
 ```{r (HIDE) Exec Summary (also in 1.1 Rating - text), echo = FALSE, include = FALSE}
-source("scripts/2018/2.1 - reportRating.R")
-source("scripts/2018/2.2 - reportRecommend.R")
-source("scripts/2018/2.3 - reportEthnicity.R")
-source("scripts/2018/2.4 - reportMotivation.R")
-source("scripts/2018/2.5 - reportRetention.R")
+source("scripts/2.1 - reportRating.R")
+source("scripts/2.2 - reportRecommend.R")
+source("scripts/2.3 - reportEthnicity.R")
+source("scripts/2.4 - reportMotivation.R")
+source("scripts/2.5 - reportRetention.R")
 ```
 ```{r Exec Summary - side-image, echo = FALSE, fig.margin = TRUE}
 knitr::include_graphics('pictures/poster.jpg')
