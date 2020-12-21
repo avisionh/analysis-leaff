@@ -14,6 +14,7 @@ library(googledrive)
 library(readr)
 library(dplyr)
 library(tidyr)
+library(stringr)
 
 drive_auth()
 
@@ -36,4 +37,8 @@ data_survey <- data_survey %>%
                values_to = "Selection",
                values_transform = list(Selection = as.character)) %>% 
   # separate multiple-choice selection into rows
-  separate_rows("Selection", sep = ";")
+  separate_rows("Selection", sep = ";") %>% 
+  rename_with(.cols = everything(), 
+              .fn = ~ tolower(x = str_replace(string = ., 
+                                              pattern = ' ', 
+                                              replacement = '_')))
