@@ -17,13 +17,20 @@
 # ------------------------------------------
 
 # Data import and wrangling
-vec_packages <- c("readr", "magrittr", "tibble", "tidyr" , "dplyr", "stringr")
-pacman::p_load(char = vec_packages, install = TRUE)
+library(googledrive)
+library(readr)
 
-year_latest <- 2019
+drive_auth()
 
 # Data Import -------------------------------------------------------------
-data_survey <- read_csv(file = "data/data_survey.csv")
+file_temp <- tempfile(fileext = ".zip")
+dl <- drive_download(file = as_id(x = "https://drive.google.com/file/d/1_lYaacu1CKJA83X7laevBDpXE_0vi_Jy/view?usp=sharing"),
+                     path = file_temp,
+                     overwrite = TRUE)
+out <- unzip(zipfile = file_temp, exdir = tempdir())
+data_survey <- read_csv(file = out)
+
+rm(file_temp, dl, out)
 
 # Data Clean --------------------------------------------------------------
 data_survey <- data_survey %>% 
