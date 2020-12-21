@@ -5,13 +5,6 @@
 # ------------------------------------------
 # DESC: loads, and cleans Excel data into suitable format for analysis
 # SCRIPT DEPENDENCIES: none
-# PACKAGE DEPENDENCIES:
- # 1. 'pacman' 
- # 2. 'readxl'
- # 3. 'magrittr'
- # 4. 'janitor'
- # 5. 'dplyr'
- # 6. 'tidyr'
 
 # NOTES: none
 # ------------------------------------------
