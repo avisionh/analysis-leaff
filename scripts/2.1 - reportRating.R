@@ -9,8 +9,8 @@ txt_rating <- data_rating %>%
   # construct right table structure to generate text required
   select(question, selection) %>% 
   group_by(selection) %>% 
-  summarise(Total = sum(x = selection, na.rm = TRUE)) %>% 
-  mutate(Percent = round(x = Total/sum(Total), digits = 2)) %>% 
+  tally() %>% 
+  mutate(Percent = round(x = n/sum(n), digits = 2)) %>% 
   # pull info for report
   filter(selection %in% c(4, 5))
 txt_rating <- sum(x = txt_rating$Percent)
