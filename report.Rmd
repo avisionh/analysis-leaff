@@ -1,5 +1,5 @@
 ---
-title: "Analysis: How successful was LEAFF 2019?"
+title: "Analysis: How successful was LEAFF 2020?"
 subtitle: "[London East Asia Film Festival (LEAFF)](https://www.leaff.org.uk/)"
 author: "[Avision Ho](https://github.com/avisionh), Strategy" 
 date: "`r Sys.Date()`"
@@ -11,7 +11,7 @@ output:
   tufte::tufte_book:
     citation_package: natbib
     latex_engine: xelatex
-bibliography: skeleton.bib
+#bibliography: skeleton.bib
 link-citations: yes
 ---
 
@@ -20,6 +20,8 @@ link-citations: yes
 library(tufte)
 
 # Load relevant packages for project
+library(readr)
+library(dplyr)
 library(stringr)
 library(tidyselect)
 library(ggplot2)
@@ -31,9 +33,9 @@ options(htmltools.dir.version = FALSE)
 
 knitr::opts_chunk$set(results = "asis", warning = FALSE, message = FALSE)
 
-# Load scripts
+# Load scripts and data
 source("scripts/0 - functions.R")
-source("scripts/1.1 - dataImportClean.R")
+data_survey <- read_csv(file = 'data/data_survey.csv')
 
 # Turn off scientific notation
 options(scipen = 999, expressions = 10000)
@@ -48,7 +50,6 @@ cb_palette <- c("cb_black" = "#000000",
                 "cb_red" = "#D55E00",
                 "cb_pink" = "#CC79A7")
 
-rm(vec_packages)
 ```
 
 # Executive Summary
@@ -124,21 +125,21 @@ knitr::include_graphics('pictures/closing_gala.jpg')
 ```{r (SHOW) 2.1 Rating - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 1", fig.width = 5, fig.height = 4}
 
 # Create levels so we capture all responses and in right order
-lvls <- c("Very good", "Good", "Average", "Poor", "Very poor")
+lvls_factors <- c("Very good", "Good", "Average", "Poor", "Very poor")
+lvls_int <- rev(seq(5))
 
 data_rating <- data_rating %>% 
-  filter(Response == 1) %>% 
   # select only columns we need
-  select(Selection, Response) %>% 
+  select(question, selection) %>% 
   # force factor order
-  mutate(Selection = factor(x = Selection, levels = lvls))
+  mutate(selection = factor(x = selection, levels = lvls_int, labels = lvls_factors))
 
 # Plot the rating
 func_plot_counts_percents(x = data_rating, 
-                          col_x = "Selection",
+                          col_x = "selection",
                           colour_fill = cb_palette[["cb_green"]], 
                           plot_title = "Rating of Experience", 
-                          plot_title_x = "How would you rate your experience of LEAFF 2019?")
+                          plot_title_x = "How would you rate your experience of LEAFF 2020?")
 ```
 + In **Figure 1**, `r toString(paste0(txt_rating * 100, "%"))` of attendees rated their LEAFF experience as being **Very good** or **Good**.
 
@@ -156,16 +157,8 @@ pander(x = table_future,
 
 ## Section 2.3: Is LEAFF appealing to minority ethnic groups in London?
 ```{r (SHOW) 2.3 No. ofscreenings - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 2", fig.width = 5, fig.height = 4}
-
-# Create levels so we capture all responses and in right order
-lvls <- c("White - British", "White - European", "Black - African / British", "Black - Caribbean / British",
-          "South Asian", "East Asian / South East Asian", "Arab", "Other (please state)", "Prefer not to say")
-
-data_ethnicity <- data_ethnicity %>% 
-  mutate(Selection = factor(x = Selection, levels = lvls)) %>% 
-  filter(Response == 1)
 func_plot_counts_percents(x = data_ethnicity,
-                         col_x = "Selection",
+                         col_x = "selection",
                          colour_fill = cb_palette["cb_dark_blue"],
                          plot_title = "Audience Ethnicity",
                          plot_title_x = "What is your ethnicity?")
@@ -182,7 +175,7 @@ func_plot_counts_percents(x = data_ethnicity,
 
 ## Section 2.5: How many previous and new audiences came to LEAFF?
 ```{r (SHOW) 2.5 Retention - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 3", fig.width = 6, fig.height = 5}
-lvls <- c("This is my first!", "Yes")
+lvls <- c("No, this is my first!", "Yes")
 
 func_plot_pie(x = table_retention, col_counts = "Percent", col_category = "Selection_New", 
               plot_title = "Audience Retention", factor_levels = lvls)

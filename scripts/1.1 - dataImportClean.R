@@ -42,3 +42,7 @@ data_survey <- data_survey %>%
               .fn = ~ tolower(x = str_replace(string = ., 
                                               pattern = ' ', 
                                               replacement = '_')))
+
+# store in folder as cannot authorise google when calling this script elsewhere
+write_csv(x = data_survey,
+          file = 'data/data_survey.csv')
