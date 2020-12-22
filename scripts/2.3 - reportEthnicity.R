@@ -1,18 +1,18 @@
+# different options to previous year
 data_ethnicity <- data_survey %>% 
-  filter(str_detect(string = Question, pattern = "ethnicity")) %>% 
-  mutate(Response = as.integer(Response)) 
+  filter(str_detect(string = question, pattern = "ethnicity"))
 
 txt_ethnicity <- data_ethnicity %>% 
-  select(Selection, Response) %>% 
-  group_by(Selection) %>% 
-  summarise(Total = sum(x = Response, na.rm = TRUE)) %>% 
-  arrange(desc(Total)) %>% 
+  select(question, selection) %>% 
+  group_by(selection) %>% 
+  tally() %>% 
+  arrange(desc(n)) %>% 
   head(1) %>% 
-  select(Selection) %>% 
+  select(selection) %>% 
   pull()
 
 # Logic to check if high rating of festival is linked to number of screenings
-if (txt_ethnicity != "White - British" | txt_ethnicity != "White - European") {
+if (txt_ethnicity != "English/Welsh/Scottish/Northern Irish/British" & txt_ethnicity != "Any other White background") {
   txt_ethnicity_conc <- c("promoting")
 } else {
   txt_ethnicity_conc <- c("following wider UK trends on")

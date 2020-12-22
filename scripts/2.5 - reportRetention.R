@@ -1,16 +1,15 @@
 data_retention <- data_survey %>% 
-  filter(str_detect(string = Question, pattern = "previous LEAFF")) %>% 
-  mutate(Response = as.integer(Response),
-         Selection_New = ifelse(str_detect(string = Selection, pattern = "Yes"), "Yes", Selection))
+  filter(str_detect(string = question, pattern = "previous LEAFF")) %>% 
+  mutate(Selection_New = ifelse(str_detect(string = selection, pattern = "Yes"), "Yes", selection))
 
 # Generate text for those who have returned from previous years
 table_retention <- data_retention %>% 
-  select(Selection, Response) %>% 
-  filter(Selection != "This is my first!") %>% 
-  group_by(Selection) %>% 
-  summarise(Total = sum(x = Response, na.rm = TRUE)) %>% 
-  mutate(Percent = round(x = Total/sum(Total), digits = 2) * 100,
-         Text = paste0(Selection, " (", Percent, "%)")) 
+  select(question, selection) %>% 
+  filter(selection != "No, this is my first!") %>% 
+  group_by(selection) %>% 
+  tally() %>% 
+  mutate(Percent = round(x = n/sum(n), digits = 2) * 100,
+         Text = paste0(selection, " (", Percent, "%)")) 
 
 txt_retention <- table_retention %>% 
   select(Text) %>% 
@@ -20,13 +19,13 @@ txt_retention <- table_retention %>%
 # For pie by separating out those who went before and those whose first time it is
 
 table_retention <- data_retention %>% 
-  select(Selection_New, Response) %>% 
+  select(Selection_New, selection) %>% 
   group_by(Selection_New) %>% 
-  summarise(Total = sum(x = Response, na.rm = TRUE)) %>% 
-  mutate(Percent = round(x = Total/sum(Total), digits = 2))
+  tally() %>% 
+  mutate(Percent = round(x = n/sum(n), digits = 2))
 
 txt_retention_new <- table_retention %>% 
-  filter(Selection_New == "This is my first!") %>% 
+  filter(Selection_New == "No, this is my first!") %>% 
   select(Percent) %>% 
   pull()
 
