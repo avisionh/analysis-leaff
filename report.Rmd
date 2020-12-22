@@ -194,7 +194,7 @@ func_plot_counts_percents(x = filter(.data = data_ethnicity, selection %in% filt
 ## Section 2.4: Why does our audience come to LEAFF?
 + Digging further into why `r toString(paste0(txt_rating * 100, "%"))` of survey respondents enjoyed their LEAFF experience to rate it as **Very good** or **Good**, we see the top three reasons for why they wanted to attend LEAFF were *`r toString(txt_motivation)`*.
 
-+ This demonstrates that LEAFF is more than just a festival that screens films, but it also caters for film fans' other interests.
++ This demonstrates that LEAFF is more than just a festival but provides immense cultural value in broadening people's horizons.
 
 ## Section 2.5: How many previous and new audiences came to LEAFF?
 ```{r (SHOW) 2.5 Retention - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 3", fig.width = 7, fig.height = 7}
