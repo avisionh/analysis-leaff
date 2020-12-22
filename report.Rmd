@@ -20,8 +20,10 @@ link-citations: yes
 library(tufte)
 
 # Load relevant packages for project
-vec_packages <- c("stringr", "tidyselect", "ggplot2", "pander")
-pacman::p_load(char = vec_packages, install = TRUE)
+library(stringr)
+library(tidyselect)
+library(ggplot2)
+library(pander)
 
 # invalidate cache when the tufte version changes
 knitr::opts_chunk$set(tidy = FALSE, cache.extra = packageVersion('tufte'))
