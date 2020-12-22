@@ -81,11 +81,17 @@ From the post-film survey data, the key findings drawn from those who have atten
 ```{r Intro - side-image, echo = FALSE, fig.margin = TRUE}
 knitr::include_graphics('pictures/director.jpg')
 ```
-> _The London East Asia Film Festival (LEAFF) is the largest film festival of its kind in London, introducing the diversity of East Asian culture though film. Our world needs, more than ever before, a medium to bridge cultural understanding. There is no better way than through film. LEAFF represents a culmination of the most inspiring, engaging and inclusive cross-cultural programming. LEAFF brings the best of East Asian cinema every year to the capital and aims to champion the growing collaboration in East Asian filmmaking._
+> _The London East Asia Film Festival (LEAFF) is the largest film festival of its kind in London, and represents the culmination of the most inspiring, engaging and inclusive cross-cultural programming. During these turbulent times, it is crucial that we move to understand each other on a humanist and artistic plain, and the exhibition of film — through festivals such as ours — is vital in aiding that communication._
+
+> _After a hugely popular fourth edition in 2019, we return for our fifth year. We at LEAFF believe that the importance of our festival lies in extending a hand across cultures through the dynamics of story-telling and cinema; and as a global hub, London represents the perfect Western gateway to show films from all over East Asia, appreciating the rich diversity of a region bubbling with creativity and renewal._
+
+> _In a year where many of us have felt stuck, our festival will allow audiences to be transported to new places and vibrant environments. Therefore, rather than make this edition an online event, our festival will be held in physical theatres across London. We passionately believe this is the only way to move audiences in true and, much needed, cinematic style. It means so much to us that we can continue celebrating Asian culture and platforming important stories through LEAFF this year._
+
+> _Just like our festival’s emblem, the fish, as a team, we are unblinking and forever moving forward, traversing new lands and stories through film. We welcome you to participate in this journey, and to our festival this year!_
 >
 > `r quote_footer('--- Hyejung Jeon, Festival Director')`
 
-`r newthought('This paper analyses the data')` collected from the London East Asia Film Festival (LEAFF) 2019. It does so with the intention of providing a summary of how successful the event was, and to provide a benchmark for future editions 
+`r newthought('This paper analyses the data')` collected from the London East Asia Film Festival (LEAFF) 2020. It does so with the intention of providing a summary of how successful the event was, and to provide a benchmark for future editions 
 
 ***
 # Section 1: Quotes from the Audience
@@ -96,25 +102,25 @@ knitr::include_graphics('pictures/opening_gala.jpg')
 ```{r Quotes - side-image-two, echo = FALSE, fig.margin = TRUE}
 knitr::include_graphics('pictures/closing_gala.jpg')
 ```
-`r newthought("This section presents")` some of the comments made by audience members who have attended LEAFF 2019.
+`r newthought("This section presents")` some of the comments made by audience members who have attended LEAFF 2020.
 
-> _"Lots of fun, both film & extra activities."_
+> _"...really gives the Asian community something to look forward to."_
 
-> _"Interesting, engaging and enjoyable."_
+> _"Thank you for holding the events at he difficult time!"_
 
-> _"Great experience with great films."_
+> _"Thank you very much for a great evening."_
 
-> _"AMAZING! So much fun!!"_
+> _"EXCELLENT TOTALLY IMMERSIVE FILM"_
 
-> _"Very enjoyable & comfy!"_
+> _"...very pleased it was able to run."_
 
-> _"Best day in my life"_
+> _"This is my favourite festival."_
 
-> _"Phenomenal"_
+> _"Excellent venue and staff!"_
 
-> _"Inspiring"_
+> _"Great festival!"_
 
-> `r quote_footer('--- LEAFF 2019 audience members')`
+> `r quote_footer('--- LEAFF 2020 audience members')`
 
 ***
 
@@ -151,17 +157,34 @@ func_plot_counts_percents(x = data_rating,
 + This `r toString(txt_recommend_conc)` the findings made in *Section 2.1* where `r toString(paste0(txt_rating * 100, "%"))` of respondents said their experience of LEAFF was **Very good** or **Good**. 
 
 ```{r (SHOW) 2.2 Recommend - table, echo = FALSE, fig.margin = TRUE}
+table_future <- table_future %>% 
+  mutate(selection = case_when(selection == 1 ~ "Very unlikely",
+                               selection == 2 ~ "Unlikely",
+                               selection == 3 ~ "Neurtal",
+                               selection == 4 ~ "Likely",
+                               selection == 5 ~ "Very likely")) %>% 
+  rename("Response" = "selection",
+         "Count" = "n")
 pander(x = table_future, 
        caption = "_Likelihood of audience recommending LEAFF to friends or colleagues_")
 ```
 
 ## Section 2.3: Is LEAFF appealing to minority ethnic groups in London?
-```{r (SHOW) 2.3 No. ofscreenings - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 2", fig.width = 5, fig.height = 4}
-func_plot_counts_percents(x = data_ethnicity,
+```{r (SHOW) 2.3 No. ofscreenings - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 2: Only showing groups with higher than 10%", fig.width = 5, fig.height = 6}
+filter_ethnicity <- data_ethnicity %>% 
+  group_by(selection) %>% 
+  tally() %>% 
+  mutate(Percent = round(x = n/sum(n), digits = 2)) %>% 
+  filter(Percent > 0.1) %>% 
+  select(selection) %>% 
+  pull()
+
+func_plot_counts_percents(x = filter(.data = data_ethnicity, selection %in% filter_ethnicity),
                          col_x = "selection",
                          colour_fill = cb_palette["cb_dark_blue"],
                          plot_title = "Audience Ethnicity",
-                         plot_title_x = "What is your ethnicity?")
+                         plot_title_x = "What is your ethnicity?") +
+  coord_flip()
 
 ```
 + In **Figure 2**, the majority of the audience who attended LEAFF and completed the survey are of the **`r toString(txt_ethnicity)`** ethnic group.
@@ -174,7 +197,7 @@ func_plot_counts_percents(x = data_ethnicity,
 + This demonstrates that LEAFF is more than just a festival that screens films, but it also caters for film fans' other interests.
 
 ## Section 2.5: How many previous and new audiences came to LEAFF?
-```{r (SHOW) 2.5 Retention - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 3", fig.width = 6, fig.height = 5}
+```{r (SHOW) 2.5 Retention - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 3", fig.width = 7, fig.height = 7}
 lvls <- c("No, this is my first!", "Yes")
 
 func_plot_pie(x = table_retention, col_counts = "Percent", col_category = "Selection_New", 
@@ -187,6 +210,7 @@ func_plot_pie(x = table_retention, col_counts = "Percent", col_category = "Selec
     - `r toString(txt_retention[2])`
     - `r toString(txt_retention[3])`
     - `r toString(txt_retention[4])`
+    - `r toString(txt_retention[5])`
 
 + As a `r toString(txt_retention_stay[1])` proportion of attendees have returned to LEAFF from previous years, then this demonstrates that previous LEAFFs were `r toString(txt_retention_stay[2])` in encouraging people to return for this year's festival.
 
