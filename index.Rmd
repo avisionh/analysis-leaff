@@ -4,7 +4,11 @@ subtitle: "[London East Asia Film Festival (LEAFF)](https://www.leaff.org.uk/)"
 author: "[Avision Ho](https://github.com/avisionh), Strategy" 
 date: "`r Sys.Date()`"
 output:
-  tufte::tufte_handout: default
+  tufte::tufte_html: default
+  tufte::tufte_book:
+    citation_package: natbib
+    latex_engine: xelatex
+link-citations: yes
 ---
 
 ```{r setup, include = FALSE}
@@ -120,7 +124,7 @@ knitr::include_graphics('pictures/closing_gala.jpg')
 `r newthought("This section presents")` key analyis of the festival's performance data.
 
 ## Section 2.1: How much did the audience enjoy LEAFF?
-```{r (SHOW) 2.1 Rating - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Experience", fig.width = 5, fig.height = 4}
+```{r (SHOW) 2.1 Rating - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 1", fig.width = 5, fig.height = 4}
 
 # Create levels so we capture all responses and in right order
 lvls_factors <- c("Very good", "Good", "Average", "Poor", "Very poor")
@@ -162,7 +166,7 @@ pander(x = table_future,
 ```
 
 ## Section 2.3: Is LEAFF appealing to minority ethnic groups in London?
-```{r (SHOW) 2.3 Ethnicity - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Ethnicity - only showing groups with higher than 10 percent", fig.width = 5, fig.height = 6}
+```{r (SHOW) 2.3 No. ofscreenings - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 2: Only showing groups with higher than 10%", fig.width = 5, fig.height = 7}
 filter_ethnicity <- data_ethnicity %>% 
   group_by(selection) %>% 
   tally() %>% 
@@ -189,7 +193,7 @@ func_plot_counts_percents(x = filter(.data = data_ethnicity, selection %in% filt
 + This demonstrates that LEAFF is more than just a festival but provides immense cultural value in broadening people's horizons.
 
 ## Section 2.5: How many previous and new audiences came to LEAFF?
-```{r (SHOW) 2.5 Retention - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Retention", fig.width = 7, fig.height = 7}
+```{r (SHOW) 2.5 Retention - plot, echo = FALSE, fig.margin = TRUE, fig.cap = "Figure 3", fig.width = 7, fig.height = 7}
 lvls <- c("No, this is my first!", "Yes")
 
 func_plot_pie(x = table_retention, col_counts = "Percent", col_category = "Selection_New", 
